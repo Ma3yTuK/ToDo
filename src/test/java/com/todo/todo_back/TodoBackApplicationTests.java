@@ -8,6 +8,7 @@ class TodoBackApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// No tests here yet
 	}
 
 }

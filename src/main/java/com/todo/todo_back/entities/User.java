@@ -27,8 +27,6 @@ public class User implements UserDetails {
     @Size(min = 2, message = "Password must be at least 2 characters long!")
     private String password;
 
-    public User() {}
-
     public void setId(Long id) {
         this.id = id;
     }

@@ -2,7 +2,6 @@ package com.todo.todo_back.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,11 +13,14 @@ import com.todo.todo_back.repositories.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
+    
     UserRepository userRepository;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

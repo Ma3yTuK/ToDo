@@ -3,7 +3,6 @@ package com.todo.todo_back.web_controllers;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,11 +22,13 @@ import com.todo.todo_back.services.UserService;
 @RestController
 public class AuthController {
 
-	@Autowired
 	JwtEncoder encoder;
-
-	@Autowired
 	UserService userService;
+
+	public AuthController(JwtEncoder encoder, UserService userService) {
+		this.encoder = encoder;
+		this.userService = userService;
+	}
 
 	@GetMapping("/token")
 	public String token(Authentication authentication) {
