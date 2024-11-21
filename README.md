@@ -1,5 +1,6 @@
 # Управление списком задач (ToDo)
 
+Sonarcloud: https://sonarcloud.io/project/overview?id=Ma3yTuK_ToDo2
 
 ## Задачи
 
