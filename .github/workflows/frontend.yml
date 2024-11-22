@@ -1,0 +1,29 @@
+name: Frontend
+on:
+  push:
+    paths:
+      - 'todo_client/**'
+      - '.github/workflows/**'
+    branches:
+      - main
+
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'todo_client/**'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarcloud: 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      with:
+        projectBaseDir: todo_client
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
