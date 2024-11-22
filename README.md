@@ -7,4 +7,8 @@ Sonarcloud frontend: https://sonarcloud.io/project/overview?id=ma3ytuk-1_ToDo_cl
 
 ### 1. Авторизация
 План: 15ч  
+Факт: 25ч  
+
+### 2. CRUD
+План: 12ч  
 Факт: -  
