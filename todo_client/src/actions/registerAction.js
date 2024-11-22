@@ -8,6 +8,10 @@ import axios from "axios";
 import { redirect } from 'next/navigation';
 
 export default async function registerAction(prev, formData) {
+    if (formData.get("password") != formData.get("repeat_password")) {
+        return "Passwords do not match";
+    }
+
     let response = axios.post(new URL("/register", properties.api_path), Object.fromEntries(formData), { validateStatus: false });
 
     let cookieStore = cookies();

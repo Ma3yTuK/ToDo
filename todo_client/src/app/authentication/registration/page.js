@@ -7,7 +7,8 @@ export default function Page() {
     const [state, action] = useActionState(registerAction, null);
     const [formData, setFormData] = useState({
         username: '',
-        password: ''
+        password: '',
+        repeat_password: ''
     });
 
     return (
@@ -32,6 +33,16 @@ export default function Page() {
                 placeholder="Password"
                 name="password"
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
+            />
+            <br />
+            <br />
+
+            <input
+                value={formData.repeat_password}
+                type="password"
+                placeholder="Repeat password"
+                name="repeat_password"
+                onChange={(e) => setFormData({...formData, repeat_password: e.target.value})}
             />
             <br />
             <br />
