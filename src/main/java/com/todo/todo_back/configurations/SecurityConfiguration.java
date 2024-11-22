@@ -44,24 +44,24 @@ public class SecurityConfiguration {
     @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
 		http
-			.authorizeHttpRequests((authorize) -> authorize
+			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/register", "/error").permitAll()
 				.anyRequest().authenticated()
 			)
 			.httpBasic(Customizer.withDefaults())
-			.oauth2ResourceServer((oauth2ResourceServer) -> oauth2ResourceServer
-				.jwt((jwt) ->
+			.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+				.jwt(jwt ->
 					jwt.decoder(jwtDecoder)
 				)
 			)
-			.sessionManagement((session) -> session
+			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
-			.exceptionHandling((exceptionHandling) -> exceptionHandling
+			.exceptionHandling(exceptionHandling -> exceptionHandling
 				.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
 				.accessDeniedHandler(new BearerTokenAccessDeniedHandler())
 			)
-			.csrf((csrf) -> csrf.disable());
+			.csrf(csrf -> csrf.disable());
 
 		return http.build();
 	}

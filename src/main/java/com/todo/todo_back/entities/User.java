@@ -55,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() { // Not supposed to be used
-        return new HashSet<GrantedAuthority>();
+        return new HashSet<>();
     }
 }
 
