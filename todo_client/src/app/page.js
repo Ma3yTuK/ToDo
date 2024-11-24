@@ -7,15 +7,16 @@ import getTasksAction from "@/actions/tasks/getTasksAction";
 import { React, useEffect, useState } from "react";
 
 export default function Home() {
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("Loading data...");
     const [tasks, setTasks] = useState([]);
 
     async function updateTasks() {
         getTasksAction().then(async ([newError, newTasks]) => {
             setError(newError);
-            setTasks(newTasks.map(task => {
-                return {...task, due: new Date(task.due)};
-            }));
+            if (!newError)
+                setTasks(newTasks.map(task => {
+                    return {...task, due: new Date(task.due)};
+                }));
         });
     }
 
