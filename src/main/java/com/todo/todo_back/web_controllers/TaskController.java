@@ -22,7 +22,7 @@ import com.todo.todo_back.services.UserService;
 @RestController
 public class TaskController {
 
-    final static String task_not_found_message = "Task not found";
+    static final String TASK_NOT_FOUND_MESSAGE = "Task not found";
 
 	TaskService taskService;
     UserService userService;
@@ -45,7 +45,7 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, task_not_found_message);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
         Task task = taskFromDb.get();
@@ -71,7 +71,7 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, task_not_found_message);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
         Task task = taskFromDb.get();
@@ -89,7 +89,7 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, task_not_found_message);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
         if (!taskFromDb.get().getUser().getId().equals(user.getId())) {
