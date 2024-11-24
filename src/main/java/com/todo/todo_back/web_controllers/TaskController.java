@@ -22,6 +22,8 @@ import com.todo.todo_back.services.UserService;
 @RestController
 public class TaskController {
 
+    final String TASK_NOT_FOUND_MESSAGE = "Task not found";
+
 	TaskService taskService;
     UserService userService;
 
@@ -34,8 +36,7 @@ public class TaskController {
 	public Iterable<Task> getTasks(Authentication authentication) {
         User user = getCurrentUser(authentication);
         
-        Iterable<Task> tasks = taskService.findTasksByUserId(user.getId());
-        return tasks;
+        return taskService.findTasksByUserId(user.getId());
 	}
 
     @GetMapping("/getTask/{taskId}")
@@ -44,13 +45,13 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
         Task task = taskFromDb.get();
 
-        if (task.getUser().getId() != user.getId()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to delete this task");
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to view this task");
         }
 
         return task;
@@ -70,12 +71,12 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
         Task task = taskFromDb.get();
 
-        if (task.getUser().getId() != user.getId()) {
+        if (!task.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to delete this task");
         }
 
@@ -88,11 +89,11 @@ public class TaskController {
         Optional<Task> taskFromDb = taskService.findTaskById(taskId);
 
         if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
         }
 
-        if (taskFromDb.get().getUser().getId() != user.getId()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to delete this task");
+        if (!taskFromDb.get().getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to update this task");
         }
 
         task.setId(taskId);
@@ -102,8 +103,11 @@ public class TaskController {
     private User getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
         Optional<User> userFromDb = userService.findUserByUsername(username);
-        User user = userFromDb.get();
-        return user;
+
+        if (userFromDb.isEmpty())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+
+        return userFromDb.get();
     }
 
 }

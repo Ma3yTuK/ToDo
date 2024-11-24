@@ -23,8 +23,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> findUserByUsername(String username) {
-        Optional<User> userFromDb = userRepository.findByUsername(username);
-        return userFromDb; 
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -39,8 +38,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> findUserById(Long userId) {
-        Optional<User> userFromDb = userRepository.findById(userId);
-        return userFromDb;
+        return userRepository.findById(userId);
     }
 
     public void encryptPassword(User user) {
