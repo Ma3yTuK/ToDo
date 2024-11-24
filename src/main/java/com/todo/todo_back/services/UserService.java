@@ -22,32 +22,33 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Optional<User> findUserByUsername(String username) {
+        Optional<User> userFromDb = userRepository.findByUsername(username);
+        return userFromDb; 
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        Optional<User> userFromDb = userRepository.findByUsername(username);
 
-        if (user == null) {
+        if (userFromDb.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        return user;
+        return userFromDb.get();
     }
 
-    public User findUserById(Long userId) {
+    public Optional<User> findUserById(Long userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
-        return userFromDb.orElse(new User());
+        return userFromDb;
     }
 
-    public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            return false;
-        }
-
+    public void encryptPassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    public void saveUser(User user) {
         userRepository.save(user);
-        return true;
     }
 
     public boolean deleteUser(Long userId) {

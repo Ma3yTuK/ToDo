@@ -1,6 +1,7 @@
 package com.todo.todo_back.web_controllers;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -51,11 +52,16 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public String register(@Validated @RequestBody User user) {
+	public String register(@RequestBody @Validated User user) {
 		Instant now = Instant.now();
 		long expiry = 36000L;
+
+		userService.encryptPassword(user);
+		Optional<User> inDbUser = userService.findUserByUsername(user.getUsername());
 		
-		if (userService.saveUser(user)) {
+		if (inDbUser.isEmpty()) {
+			userService.saveUser(user);
+			
 			String scope = user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(" "));
