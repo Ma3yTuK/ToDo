@@ -84,7 +84,7 @@ export default function Page({ params }) {
     )
 }
 Page.propTypes = {
-    padding: PropTypes.shape({
+    params: PropTypes.shape({
         then: PropTypes.func
     })
 }
