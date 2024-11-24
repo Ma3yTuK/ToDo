@@ -1,22 +1,36 @@
 "use client";
 
-import { React, useState, useActionState } from "react";
+import { React, useTransition, useState } from "react";
 import registerAction from "@/actions/registerAction";
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
-    const [state, action] = useActionState(registerAction, null);
+    const [isPending, startTransition] = useTransition();
+    const searchParams = useSearchParams();
+    const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
         repeat_password: ''
     });
 
+    function handleSubmit(event) {
+        event.preventDefault();
+        startTransition(async () => {
+            if (formData.password !== formData.repeat_password) {
+                setError("Passwords do not match");
+                return;
+            }
+            setError(await registerAction(formData, searchParams.get('from')));
+        })
+    }
+
     return (
         <main style={{ padding: '50px' }}>
             <h1>Registration </h1>
             <br />
     
-            <form action={action}>
+            <form onSubmit={handleSubmit}>
             <input
                 value={formData.username}
                 type="text"
@@ -47,10 +61,10 @@ export default function Page() {
             <br />
             <br />
 
-            <p aria-live="polite">{state}</p>
+            <p aria-live="polite">{error}</p>
             <br />
             
-            <button type="submit">Register</button>
+            <button type="submit" disabled={isPending}>Register</button>
             </form>
     
         </main>

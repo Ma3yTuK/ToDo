@@ -1,17 +1,15 @@
 'use server';
 
 import { processErrorMessage } from "@/helpers/processErrorMessage";
-import { setAuthToken } from "@/helpers/setAuthToken";
 import { cookies } from "next/headers";
 import properties from "@/properties";
-import axios from "axios";
 import { redirect } from 'next/navigation';
 
-export default async function loginAction(prev, formData) {
-    let response = axios.get(new URL("/token", properties.api_path), { validateStatus: false, 
-        auth: {
-            username: formData.get("username"),
-            password: formData.get("password")
+export default async function loginAction(userData, redirectUrl) {
+    let response = await fetch(new URL("/token", properties.api_path), {
+        method: "get",
+        headers: {
+            "Authorization": "Basic " + btoa(userData.username + ":" + userData.password)
         }
     });
 
@@ -19,11 +17,10 @@ export default async function loginAction(prev, formData) {
     let token;
     let error;
 
-    response = await response;
     if (response.status < 300 && response.status >= 200) {
-        token = response.data;
+        token = await response.text();
     } else {
-        error = processErrorMessage(response);
+        error = await processErrorMessage(response);
     }
 
     cookieStore = await cookieStore;
@@ -35,11 +32,10 @@ export default async function loginAction(prev, formData) {
         maxAge: 60 * 60 * 10, // 10 hours
         sameSite: "strict"
     });
-    setAuthToken(token);
 
     if (error) {
         return error;
     }
 
-    return redirect(formData.get("from_url") || "/");
+    return redirect(redirectUrl || "/");
 }

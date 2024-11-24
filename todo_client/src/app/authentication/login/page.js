@@ -1,23 +1,32 @@
 "use client";
 
-import { React, useState, useActionState } from "react";
+import { React, useTransition, useState } from "react";
 import loginAction from "@/actions/loginAction";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
+import Link from "next/link";
 
 export default function Page() {
+    const [isPending, startTransition] = useTransition();
     const searchParams = useSearchParams();
-    const [state, action] = useActionState(loginAction, null);
+    const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
         username: '',
         password: ''
     });
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        startTransition(async () => {
+            setError(await loginAction(formData, searchParams.get('from')));
+        })
+    }
 
     return (
         <main style={{ padding: '50px' }}>
             <h1>Login </h1>
             <br />
     
-            <form action={action}>
+            <form onSubmit={handleSubmit}>
             <input
                 value={formData.username}
                 type="text"
@@ -38,18 +47,19 @@ export default function Page() {
             <br />
             <br />
 
-            <input
-                type="hidden"
-                name="from_url"
-                value={searchParams.get('from') || '/'}
-            />
-
-            <p aria-live="polite">{state}</p>
+            <p aria-live="polite">{error}</p>
             <br />
             
-            <button type="submit">Login</button>
+            <button type="submit" disabled={isPending}>Login</button>
+
+            <Link href={{
+                pathname: '/authentication/registration',
+                query: searchParams
+            }}>
+                <button>Register</button>
+            </Link>
+
             </form>
-    
         </main>
     )
 }

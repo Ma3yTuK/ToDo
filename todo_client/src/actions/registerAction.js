@@ -1,28 +1,27 @@
 'use server';
 
 import { processErrorMessage } from "@/helpers/processErrorMessage";
-import { setAuthToken } from "@/helpers/setAuthToken";
 import { cookies } from "next/headers";
 import properties from "@/properties";
-import axios from "axios";
 import { redirect } from 'next/navigation';
 
-export default async function registerAction(prev, formData) {
-    if (formData.get("password") != formData.get("repeat_password")) {
-        return "Passwords do not match";
-    }
-
-    let response = axios.post(new URL("/register", properties.api_path), Object.fromEntries(formData), { validateStatus: false });
+export default async function registerAction(userData, redirectUrl) {
+    let response = await fetch(new URL("/register", properties.api_path), {
+        method: "post",
+        body: JSON.stringify(userData),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
 
     let cookieStore = cookies();
     let token;
     let error;
 
-    response = await response;
     if (response.status < 300 && response.status >= 200) {
-        token = response.data;
+        token = await response.text();
     } else {
-        error = processErrorMessage(response);
+        error = await processErrorMessage(response);
     }
 
     cookieStore = await cookieStore;
@@ -34,11 +33,10 @@ export default async function registerAction(prev, formData) {
         maxAge: 60 * 60 * 10, // 10 hours
         sameSite: "strict"
     });
-    setAuthToken(token);
 
     if (error) {
         return error;
     }
 
-    return redirect("/");
+    return redirect(redirectUrl || "/");
 }
