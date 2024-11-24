@@ -3,37 +3,42 @@
 Sonarcloud backend: https://sonarcloud.io/project/overview?id=ma3ytuk-1_ToDo  
 Sonarcloud frontend: https://sonarcloud.io/project/overview?id=ma3ytuk-1_ToDo_client  
 
+## Entitity relationships  
+
+![Untitled Diagram drawio](https://github.com/user-attachments/assets/10dec545-6629-4b41-8aad-0f0fcb7a4c47)
+
+
 ## Задачи
 
 ### 1. Авторизация
 a) Бэкенд  
-    План: 10ч  
-    Факт: 15ч  
+&emsp; План: 10ч  
+&emsp; Факт: 15ч  
 б) Фронтенд  
-    План: 5ч  
-    Факт: 10ч  
+&emsp; План: 5ч  
+&emsp; Факт: 10ч  
 в) Бд  
-    План: 5ч  
-    Факт: 2ч  
+&emsp; План: 5ч  
+&emsp; Факт: 2ч  
 
 ### 2. CRUD
 a) Бэкенд  
-    План: 5ч  
-    Факт: 5ч  
+&emsp; План: 5ч  
+&emsp; Факт: 5ч  
 б) Фронтенд  
-    План: 5ч  
-    Факт: 8ч  
+&emsp; План: 5ч  
+&emsp; Факт: 8ч  
 в) Бд  
-    План: 2ч  
-    Факт: 1ч  
+&emsp; План: 2ч  
+&emsp; Факт: 1ч  
 
 ### 3. Фильтрация
 a) Бэкенд  
-    План: 2ч  
-    Факт: -  
+&emsp; План: 2ч  
+&emsp; Факт: -  
 б) Фронтенд  
-    План: 2ч  
-    Факт: -  
+&emsp; План: 2ч  
+&emsp; Факт: -  
 в) Бд  
-    План: 4ч  
-    Факт: -  
+&emsp; План: 4ч  
+&emsp; Факт: -  
