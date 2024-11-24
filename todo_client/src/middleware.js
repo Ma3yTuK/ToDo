@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function middleware(request) {
     let token = request.cookies.get('token');
 
-    if (!token || !token.value) {
+    if (!token?.value) {
         const loginUrl = new URL('/authentication/login', request.url);
         loginUrl.searchParams.set('from', request.nextUrl.pathname);
         return NextResponse.redirect(loginUrl);

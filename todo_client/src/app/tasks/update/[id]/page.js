@@ -4,6 +4,7 @@ import { React, useEffect, useTransition, useState } from "react";
 import getTaskAction from "@/actions/tasks/getTaskAction";
 import { useSearchParams } from "next/navigation";
 import updateTaskAction from "@/actions/tasks/updateTaskAction";
+import PropTypes from "prop-types";
 
 export default function Page({ params }) {
     const [isPending, startTransition] = useTransition();
@@ -81,4 +82,9 @@ export default function Page({ params }) {
     
         </main>
     )
+}
+Page.propTypes = {
+    padding: PropTypes.shape({
+        then: PropTypes.func
+    })
 }

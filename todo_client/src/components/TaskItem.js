@@ -4,6 +4,7 @@ import { React, useTransition } from "react";
 import { usePathname } from "next/navigation";
 import deleteTaskAction from "@/actions/tasks/deleteTaskAction";
 import Link from "next/link";
+import PropTypes from "prop-types";
 
 export default function TaskItem({ task, updateTasks }) {
     const pathname = usePathname();
@@ -34,4 +35,16 @@ export default function TaskItem({ task, updateTasks }) {
             </Link>
         </div>
     )
+}
+TaskItem.propTypes = {
+    task: PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        description: PropTypes.string,
+        due: PropTypes.shape({
+            getTime: PropTypes.func
+        }),
+        status: PropTypes.bool,
+    }),
+    updateTasks: PropTypes.func
 }
