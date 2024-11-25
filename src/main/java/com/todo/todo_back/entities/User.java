@@ -19,6 +19,22 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "t_user")
 public class User implements UserDetails {
 
+    public static enum Fields {
+        ID("id"),
+        USERNAME("username"),
+        PASSWORD("password");
+
+        Fields(String databaseFieldName) {
+            this.databaseFieldName = databaseFieldName;
+        }
+
+        private final String databaseFieldName;
+
+        public String getDatabaseFieldName() {
+            return databaseFieldName;
+        }
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")

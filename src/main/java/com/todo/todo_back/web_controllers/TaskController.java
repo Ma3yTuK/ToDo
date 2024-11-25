@@ -1,5 +1,6 @@
 package com.todo.todo_back.web_controllers;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -33,10 +35,26 @@ public class TaskController {
 	}
 
 	@GetMapping("/getTasks")
-	public Iterable<Task> getTasks(Authentication authentication) {
+	public Iterable<Task> getTasks(
+        @RequestParam Optional<Boolean> isStatusFilter,
+        @RequestParam Optional<ZonedDateTime> dueGreaterThanFilter,
+        @RequestParam Optional<ZonedDateTime> dueLessThanFilter,
+        @RequestParam Optional<String> titleLikeFilter,
+        @RequestParam(defaultValue = "TITLE") Task.Fields sortingField,
+        @RequestParam(defaultValue = "true") Boolean isAscending,
+        Authentication authentication
+    ) {
         User user = getCurrentUser(authentication);
         
-        return taskService.findTasksByUserId(user.getId());
+        return taskService.findAll(
+            isStatusFilter, 
+            dueGreaterThanFilter, 
+            dueLessThanFilter, 
+            titleLikeFilter, 
+            Optional.of(user), 
+            sortingField, 
+            isAscending
+        );
 	}
 
     @GetMapping("/getTask/{taskId}")

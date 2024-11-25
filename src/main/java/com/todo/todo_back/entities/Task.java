@@ -15,6 +15,25 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Task {
+
+    public static enum Fields {
+        ID("id"),
+        USER("user"),
+        TITLE("title"),
+        DESCRIPTION("description"),
+        DUE("due"),
+        STATUS("status");
+
+        Fields(String databaseFieldName) {
+            this.databaseFieldName = databaseFieldName;
+        }
+
+        private final String databaseFieldName;
+
+        public String getDatabaseFieldName() {
+            return databaseFieldName;
+        }
+    }
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
