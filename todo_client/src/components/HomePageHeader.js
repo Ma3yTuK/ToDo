@@ -132,8 +132,6 @@ export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
     )
 }
 HomePageHeader.propTypes = {
-    searchParams: PropTypes.shape({
-        get: PropTypes.func
-    }),
+    addSearchParam: PropTypes.func,
     setSearchParams: PropTypes.func
 }
