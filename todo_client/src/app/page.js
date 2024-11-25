@@ -14,7 +14,7 @@ export default function Home() {
     const pathname = usePathname();
     const router = useRouter();
     const [updateSwitcher, setUpdateSwitcher] = useState(false);
-    const [isAcive, setIsActive] = useState(false); // Tasks should not be shown when request is processing
+    const [isActive, setIsActive] = useState(false); // Tasks should not be shown when request is processing
 
     function switcher() { // Starts useEffect
         setUpdateSwitcher(!updateSwitcher);
@@ -56,7 +56,7 @@ export default function Home() {
         return error;
 
     let taskItems;
-    if (isAcive)
+    if (isActive)
         taskItems = [];
     else
         taskItems = tasks.map(task => <TaskItem key={task.id} task={task} updateTasks={switcher} />);
