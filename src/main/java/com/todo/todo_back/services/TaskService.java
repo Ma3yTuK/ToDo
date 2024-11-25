@@ -55,7 +55,7 @@ public class TaskService {
             .and(titleLikeFilter.isPresent() ? TaskSpecification.titleLike(titleLikeFilter.get()) : null)
             .and(userEqualFilter.isPresent() ? TaskSpecification.userEqual(userEqualFilter.get()) : null);
 
-        Sort sort = Sort.by(isAscending == false ? Sort.Direction.DESC : Sort.Direction.ASC, sortingField.getDatabaseFieldName());
+        Sort sort = Sort.by(Boolean.TRUE.equals(isAscending) ? Sort.Direction.ASC : Sort.Direction.DESC, sortingField.getDatabaseFieldName());
 
         return taskRepository.findAll(filters, sort);
     }

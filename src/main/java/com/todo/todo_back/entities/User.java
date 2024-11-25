@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "t_user")
 public class User implements UserDetails {
 
-    public static enum Fields {
+    public enum Fields {
         ID("id"),
         USERNAME("username"),
         PASSWORD("password");

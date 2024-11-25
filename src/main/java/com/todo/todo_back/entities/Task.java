@@ -16,7 +16,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Task {
 
-    public static enum Fields {
+    public enum Fields {
         ID("id"),
         USER("user"),
         TITLE("title"),
