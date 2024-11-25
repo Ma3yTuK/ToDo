@@ -14,8 +14,8 @@ export default function TaskItem({ task, updateTasks }) {
         event.preventDefault();
         startDeleteTransition(async () => {
             await deleteTaskAction(task.id);
-            await updateTasks();
-        })
+            updateTasks();
+        });
     }
     
     return (

@@ -4,8 +4,10 @@ import properties from "@/properties";
 import getAuthHeader from "@/actions/getAuthHeader";
 import { processErrorMessage } from "@/helpers/processErrorMessage";
 
-export default async function getTasksAction() {
-    let response = await fetch(new URL("/getTasks", properties.api_path), {
+export default async function getTasksAction(searchParams) {
+    let url = new URL("/getTasks", properties.api_path);
+    url.search = searchParams;
+    let response = await fetch(url, {
         method: "get",
         headers: await getAuthHeader()
     });
