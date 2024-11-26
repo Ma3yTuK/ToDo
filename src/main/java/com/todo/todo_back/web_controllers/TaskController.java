@@ -107,10 +107,8 @@ public class TaskController {
 
     private User getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
-        User user = userService.findUserByUsername(username)
+        return userService.findUserByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
-
-        return user;
     }
 
 }

@@ -1,7 +1,6 @@
 'use server';
 
 import { processErrorMessage } from "@/helpers/processErrorMessage";
-import { cookies } from "next/headers";
 import properties from "@/properties";
 import { redirect } from 'next/navigation';
 import { setAuthToken } from "@/helpers/setAuthToken";
