@@ -5,6 +5,7 @@ import logoutAction from "@/actions/logoutAction";
 import Link from "next/link";
 import { usePathname, useSearchParams } from 'next/navigation'
 import PropTypes from "prop-types";
+import styles from './styles/HomePageHeader.module.css';
 
 
 function getFilters(searchParams) {
@@ -103,30 +104,47 @@ export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
     }
 
     return (
-        <div>
-            <button disabled={isLogoutPending} onClick={handleLogout}>Logout</button>
+        <div className={styles.header}>
+            <button disabled={isLogoutPending} onClick={handleLogout} className={styles.logoutButton}>
+                Logout
+            </button>
             
-            <Link href={{
-                pathname: "/tasks/create",
-                query: {
-                    from: pathname
-                }
-            }}>
-                <button>Add</button>
+            <Link href={{ pathname: "/tasks/create", query: { from: location.pathname } }}>
+                <button className={styles.addButton}>Add</button>
             </Link>
 
-            <div>
-                <input type="text" value={filters.titleLikeFilter} onChange={handleTitleLikeFilter} />
-                <input type="datetime-local" value={filters.dueGreaterThanFilter} onChange={handleDueGreaterThanFilter} />
-                <input type="datetime-local" value={filters.dueLessThanFilter} onChange={handleDueLessThanFilter} />
+            <div className={styles.filters}>
+                <input
+                    type="text"
+                    value={filters.titleLikeFilter}
+                    onChange={handleTitleLikeFilter}
+                    placeholder="Search by title"
+                    className={styles.inputField}
+                />
+                <input
+                    type="datetime-local"
+                    value={filters.dueGreaterThanFilter}
+                    onChange={handleDueGreaterThanFilter}
+                    className={styles.inputField}
+                />
+                <input
+                    type="datetime-local"
+                    value={filters.dueLessThanFilter}
+                    onChange={handleDueLessThanFilter}
+                    className={styles.inputField}
+                />
 
-                <select value={filters.isStatusFilter} onChange={handleIsStatusFilter}>
-                    <option disabled style={{display: 'none'}}></option>
+                <select value={filters.isStatusFilter} onChange={handleIsStatusFilter} className={styles.select}>
+                    <option disabled value="">
+                        Select status
+                    </option>
                     <option>finished</option>
                     <option>not finished</option>
                 </select>
 
-                <button onClick={handleReset}>Reset</button>
+                <button onClick={handleReset} className={styles.resetButton}>
+                    Reset
+                </button>
             </div>
         </div>
     )

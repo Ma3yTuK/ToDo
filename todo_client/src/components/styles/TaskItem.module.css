@@ -1,0 +1,96 @@
+.taskItem {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 0.2s;
+}
+
+.taskItem:hover {
+    transform: scale(1.02);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.label {
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.description {
+    font-size: 14px;
+    color: #666;
+    margin-left: 10px;
+}
+
+.dueDate {
+    font-size: 14px;
+    color: #007bff;
+    margin-left: 10px;
+}
+
+.status {
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.finished {
+    color: #28a745;
+}
+
+.notFinished {
+    color: #d9534f;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.deleteButton,
+.updateButton {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deleteButton {
+    background-color: #d9534f;
+    color: #fff;
+}
+
+.deleteButton:hover {
+    background-color: #c9302c;
+}
+
+.updateButton {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.updateButton:hover {
+    background-color: #0056b3;
+}

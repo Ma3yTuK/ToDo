@@ -3,6 +3,7 @@
 import { React, useTransition, useState } from "react";
 import addTaskAction from "@/actions/tasks/addTaskAction";
 import { useSearchParams } from 'next/navigation';
+import styles from "./page.module.css";
 
 export default function Page() {
     const [isPending, startTransition] = useTransition();
@@ -23,54 +24,76 @@ export default function Page() {
     }
 
     return (
-        <main style={{ padding: '50px' }}>
-            <h1>Add note </h1>
-            <br />
-    
-            <form onSubmit={handleSubmit}>
-            <input
-                value={formData.title}
-                type="text"
-                placeholder="Title"
-                name="title"
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
-            />
-            <br />
-            <br />
-    
-            <textarea
-                value={formData.description}
-                placeholder="Description"
-                name="description"
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-            />
-            <br />
-            <br />
+        <main className={styles.main}>
+            <h1 className={styles.header}>Add Note</h1>
 
-            <input
-                value={new Date(formData.due.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
-                type="datetime-local"
-                name="due"
-                onChange={(e) => setFormData({...formData, due: new Date(e.target.value)})}
-            />
-            <br />
-            <br />
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <label htmlFor="title" className={styles.label}>
+                    Title:
+                </label>
+                <input
+                    id="title"
+                    value={formData.title}
+                    type="text"
+                    placeholder="Enter title"
+                    name="title"
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className={styles.input}
+                />
 
-            <input
-                value={formData.status}
-                type="checkbox"
-                name="status"
-                onChange={(e) => setFormData({...formData, status: e.target.checked})}
-            />
-            <br />
-            <br />
+                <label htmlFor="description" className={styles.label}>
+                    Description:
+                </label>
+                <textarea
+                    id="description"
+                    value={formData.description}
+                    placeholder="Enter description"
+                    name="description"
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className={styles.textarea}
+                />
 
-            <p aria-live="polite">{error}</p>
-            <br />
-            
-            <button type="submit" disabled={isPending}>Create</button>
+                <label htmlFor="due" className={styles.label}>
+                    Due Date:
+                </label>
+                <input
+                    id="due"
+                    value={new Date(
+                        formData.due.getTime() - new Date().getTimezoneOffset() * 60000
+                    )
+                        .toISOString()
+                        .slice(0, 16)}
+                    type="datetime-local"
+                    name="due"
+                    onChange={(e) =>
+                        setFormData({ ...formData, due: new Date(e.target.value) })
+                    }
+                    className={styles.input}
+                />
+
+                <div className={styles.statusWrapper}>
+                    <label htmlFor="status" className={styles.label}>
+                        Status:
+                    </label>
+                    <input
+                        id="status"
+                        type="checkbox"
+                        name="status"
+                        checked={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                        className={styles.checkbox}
+                    />
+                    <span className={styles.statusText}>
+                        {formData.status ? 'Finished' : 'Not Finished'}
+                    </span>
+                </div>
+
+                {error && <p aria-live="polite" className={styles.error}>{error}</p>}
+
+                <button type="submit" disabled={isPending} className={styles.button}>
+                    Create
+                </button>
             </form>
-    
         </main>
     )
 }

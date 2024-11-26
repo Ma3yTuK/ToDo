@@ -63,7 +63,7 @@ export default function Home() {
 
     return (
         <>
-            {error}
+            {error && <p className={styles.error}>{error}</p>}
             <HomePageHeader addSearchParam={addSearchParam} resetSearchParams={resetSearchParams} />
             <div className={styles.container}>
                 {taskItems}

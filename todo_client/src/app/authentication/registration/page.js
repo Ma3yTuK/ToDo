@@ -2,6 +2,7 @@
 
 import { React, useTransition, useState } from "react";
 import registerAction from "@/actions/registerAction";
+import styles from "./page.module.css";
 import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
@@ -26,47 +27,51 @@ export default function Page() {
     }
 
     return (
-        <main style={{ padding: '50px' }}>
-            <h1>Registration </h1>
-            <br />
-    
-            <form onSubmit={handleSubmit}>
-            <input
-                value={formData.username}
-                type="text"
-                placeholder="Username"
-                name="username"
-                onChange={(e) => setFormData({...formData, username: e.target.value})}
-            />
-            <br />
-            <br />
-    
-            <input
-                value={formData.password}
-                type="password"
-                placeholder="Password"
-                name="password"
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
-            />
-            <br />
-            <br />
+        <main className={styles.registrationContainer}>
+            <div className={styles.formWrapper}>
+                <h1 className={styles.formTitle}>Registration</h1>
 
-            <input
-                value={formData.repeat_password}
-                type="password"
-                placeholder="Repeat password"
-                name="repeat_password"
-                onChange={(e) => setFormData({...formData, repeat_password: e.target.value})}
-            />
-            <br />
-            <br />
+                <form onSubmit={handleSubmit} className={styles.registrationForm}>
+                    <div className={styles.inputGroup}>
+                        <input
+                            value={formData.username}
+                            type="text"
+                            placeholder="Username"
+                            name="username"
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            className={styles.inputField}
+                        />
+                    </div>
 
-            <p aria-live="polite">{error}</p>
-            <br />
-            
-            <button type="submit" disabled={isPending}>Register</button>
-            </form>
-    
+                    <div className={styles.inputGroup}>
+                        <input
+                            value={formData.password}
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            className={styles.inputField}
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <input
+                            value={formData.repeat_password}
+                            type="password"
+                            placeholder="Repeat password"
+                            name="repeat_password"
+                            onChange={(e) => setFormData({ ...formData, repeat_password: e.target.value })}
+                            className={styles.inputField}
+                        />
+                    </div>
+
+                    {error && <p className={styles.errorMessage} aria-live="polite">{error}</p>}
+
+                    <button type="submit" disabled={isPending} className={styles.btnRegister}>
+                        {isPending ? 'Registering...' : 'Register'}
+                    </button>
+                </form>
+            </div>
         </main>
     )
 }
