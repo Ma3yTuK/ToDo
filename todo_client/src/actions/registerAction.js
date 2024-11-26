@@ -1,7 +1,7 @@
 'use server';
 
 import { processErrorMessage } from "@/helpers/processErrorMessage";
-import { cookies } from "next/headers";
+import { setAuthToken } from "@/helpers/setAuthToken";
 import properties from "@/properties";
 import { redirect } from 'next/navigation';
 
@@ -14,7 +14,6 @@ export default async function registerAction(userData, redirectUrl) {
         }
     });
 
-    let cookieStore = cookies();
     let token;
     let error;
 
@@ -24,15 +23,7 @@ export default async function registerAction(userData, redirectUrl) {
         error = await processErrorMessage(response);
     }
 
-    cookieStore = await cookieStore;
-    cookieStore.set({
-        name: "token",
-        value: token,
-        httpOnly: true,
-        path: "/",
-        maxAge: 60 * 60 * 10, // 10 hours
-        sameSite: "strict"
-    });
+    setAuthToken(token);
 
     if (error) {
         return error;

@@ -3,7 +3,7 @@
 import { React, useState, useTransition } from "react";
 import logoutAction from "@/actions/logoutAction";
 import Link from "next/link";
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import PropTypes from "prop-types";
 import styles from './styles/HomePageHeader.module.css';
 
@@ -54,7 +54,6 @@ function getFilters(searchParams) {
 
 
 export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
-    const pathname = usePathname();
     const [isLogoutPending, startLogoutTransition] = useTransition();
     const [filters, setFilters] = useState(getFilters(useSearchParams()));
 

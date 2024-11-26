@@ -60,13 +60,8 @@ public class TaskController {
     @GetMapping("/getTask/{taskId}")
 	public Task getTask(@PathVariable Long taskId, Authentication authentication) {
         User user = getCurrentUser(authentication);
-        Optional<Task> taskFromDb = taskService.findTaskById(taskId);
-
-        if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
-        }
-
-        Task task = taskFromDb.get();
+        Task task = taskService.findTaskById(taskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE));
 
         if (!task.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to view this task");
@@ -86,13 +81,8 @@ public class TaskController {
     @DeleteMapping("/deleteTask/{taskId}")
     public void deleteTask(@PathVariable Long taskId, Authentication authentication) {
         User user = getCurrentUser(authentication);
-        Optional<Task> taskFromDb = taskService.findTaskById(taskId);
-
-        if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
-        }
-
-        Task task = taskFromDb.get();
+        Task task = taskService.findTaskById(taskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE));
 
         if (!task.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to delete this task");
@@ -104,13 +94,10 @@ public class TaskController {
     @PutMapping("/updateTask/{taskId}")
     public void updateTask(@PathVariable Long taskId, @RequestBody @Validated Task task, Authentication authentication) {
         User user = getCurrentUser(authentication);
-        Optional<Task> taskFromDb = taskService.findTaskById(taskId);
+        Task foundTask = taskService.findTaskById(taskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE));
 
-        if (taskFromDb.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND_MESSAGE);
-        }
-
-        if (!taskFromDb.get().getUser().getId().equals(user.getId())) {
+        if (!foundTask.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to update this task");
         }
 
@@ -120,12 +107,10 @@ public class TaskController {
 
     private User getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
-        Optional<User> userFromDb = userService.findUserByUsername(username);
+        User user = userService.findUserByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
 
-        if (userFromDb.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
-
-        return userFromDb.get();
+        return user;
     }
 
 }

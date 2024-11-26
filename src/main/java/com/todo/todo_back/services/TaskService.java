@@ -49,11 +49,11 @@ public class TaskService {
         Boolean isAscending
     ) {
         Specification<Task> filters = Specification
-            .where(isStatusFilter.isPresent() ? TaskSpecification.isStatus(isStatusFilter.get()) : null)
-            .and(dueGreaterThanFilter.isPresent() ? TaskSpecification.dueGreaterThan(dueGreaterThanFilter.get()) : null)
-            .and(dueLessThanFilter.isPresent() ? TaskSpecification.dueLessThan(dueLessThanFilter.get()) : null)
-            .and(titleLikeFilter.isPresent() ? TaskSpecification.titleLike(titleLikeFilter.get()) : null)
-            .and(userEqualFilter.isPresent() ? TaskSpecification.userEqual(userEqualFilter.get()) : null);
+            .where(isStatusFilter.map(TaskSpecification::isStatus).orElse(null))
+            .and(dueGreaterThanFilter.map(TaskSpecification::dueGreaterThan).orElse(null))
+            .and(dueLessThanFilter.map(TaskSpecification::dueLessThan).orElse(null))
+            .and(titleLikeFilter.map(TaskSpecification::titleLike).orElse(null))
+            .and(userEqualFilter.map(TaskSpecification::userEqual).orElse(null));
 
         Sort sort = Sort.by(Boolean.TRUE.equals(isAscending) ? Sort.Direction.ASC : Sort.Direction.DESC, sortingField.getDatabaseFieldName());
 
