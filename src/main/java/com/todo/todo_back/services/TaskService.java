@@ -29,15 +29,8 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    public boolean deleteTask(Long taskId) {
-        Optional<Task> taskFromDB = taskRepository.findById(taskId);
-
-        if (taskFromDB.isPresent()) {
-            taskRepository.deleteById(taskId);
-            return true;
-        }
-
-        return false;
+    public void deleteTask(Long taskId) {
+        taskRepository.deleteById(taskId);
     }
 
     public Iterable<Task> findAll(Optional<Boolean> isStatusFilter, 
