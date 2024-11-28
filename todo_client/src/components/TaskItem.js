@@ -1,7 +1,7 @@
 "use client"
 
 import { React, useTransition } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import deleteTaskAction from "@/actions/tasks/deleteTaskAction";
 import Image from "next/image";
 import PropTypes from "prop-types";
@@ -13,7 +13,6 @@ import Link from "next/link";
 
 export default function TaskItem({ task, updateTasks }) {
     const pathname = usePathname();
-    const router = useRouter();
     const [isDeletePending, startDeleteTransition] = useTransition();
     
     const formattedDate = new Date(task.due).toLocaleString('en-GB', {
