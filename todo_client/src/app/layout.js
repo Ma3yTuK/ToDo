@@ -1,4 +1,5 @@
 import "./globals.css"
+import PropTypes from "prop-types";
 
 export const metadata = {
   title: 'Next.js',
@@ -12,3 +13,6 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
+RootLayout.propTypes = {
+  children: PropTypes.node,
+};

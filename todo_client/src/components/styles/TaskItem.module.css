@@ -37,7 +37,10 @@ div.itemFooter {
     padding: 0px 10px;
 }
 
-p.description {
+a.description {
+    display: block;
+    text-decoration: none;
+    color: black;
     transition: transform 0.2s;
     overflow-wrap: break-word;
     overflow: hidden;
@@ -52,7 +55,6 @@ p.description {
 
     &:hover {
         transform: scale(1.02);
-        cursor: pointer;
     }
 }
 

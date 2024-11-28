@@ -9,6 +9,7 @@ import styles from './styles/TaskItem.module.css';
 import properties from "@/properties";
 import deleteTaskIcon from "@/icons/delete_task.png";
 import comletedIcon from "@/icons/completed.webp";
+import Link from "next/link";
 
 export default function TaskItem({ task, updateTasks }) {
     const pathname = usePathname();
@@ -30,20 +31,14 @@ export default function TaskItem({ task, updateTasks }) {
             updateTasks();
         });
     }
-
-    function handleUpdate(event) {
-        event.preventDefault();
-
-        router.push(properties.routes.update_task + task.id + "?" + new URLSearchParams({ from: pathname }).toString());
-    }
     
     return (
         <div className={styles.taskItem}>
-            <div onClick={handleUpdate} className={styles.content}>
+            <div className={styles.content}>
                 <h1 className={styles.title}>{task.title}</h1>
-                <p className={styles.description}>
+                <Link href={{ pathname: properties.routes.update_task + task.id, query: { from: pathname } }} className={styles.description}>
                     {task.description}
-                </p>
+                </Link>
             </div>
             <div className={styles.itemFooter}>
                 <p className={task.status ? styles.nothing : styles.dueDate} disabled>
