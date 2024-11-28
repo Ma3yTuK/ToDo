@@ -49,6 +49,7 @@ public class Task {
     private String title;
 
     @Basic
+    @Column(length = 4096)
     private String description;
 
     @NotNull(message = "Due must be specified!")

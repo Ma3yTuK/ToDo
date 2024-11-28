@@ -4,6 +4,7 @@ import { React, useTransition, useState } from "react";
 import registerAction from "@/actions/registerAction";
 import styles from "./page.module.css";
 import { useSearchParams } from 'next/navigation';
+import properties from "@/properties";
 
 export default function Page() {
     const [isPending, startTransition] = useTransition();
@@ -22,52 +23,52 @@ export default function Page() {
                 setError("Passwords do not match");
                 return;
             }
-            setError(await registerAction(formData, searchParams.get('from')));
+            setError(await registerAction(formData, searchParams.get('from') || properties.routes.home));
         })
     }
 
     return (
-        <main className={styles.registrationContainer}>
-            <div className={styles.formWrapper}>
-                <h1 className={styles.formTitle}>Registration</h1>
+        <main className={"auth-container"}>
+            <div className={"form-wrapper"}>
+                <h1 className={"form-title"}>Registration</h1>
 
-                <form onSubmit={handleSubmit} className={styles.registrationForm}>
-                    <div className={styles.inputGroup}>
+                <form onSubmit={handleSubmit}>
+                    <div className={"input-group"}>
                         <input
                             value={formData.username}
                             type="text"
                             placeholder="Username"
                             name="username"
                             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                            className={styles.inputField}
+                            className={"input-field"}
                         />
                     </div>
 
-                    <div className={styles.inputGroup}>
+                    <div className={"input-group"}>
                         <input
                             value={formData.password}
                             type="password"
                             placeholder="Password"
                             name="password"
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            className={styles.inputField}
+                            className={"input-field"}
                         />
                     </div>
 
-                    <div className={styles.inputGroup}>
+                    <div className={"input-group"}>
                         <input
                             value={formData.repeat_password}
                             type="password"
                             placeholder="Repeat password"
                             name="repeat_password"
                             onChange={(e) => setFormData({ ...formData, repeat_password: e.target.value })}
-                            className={styles.inputField}
+                            className={"input-field"}
                         />
                     </div>
 
-                    {error && <p className={styles.errorMessage} aria-live="polite">{error}</p>}
+                    {error && <p className={"error-message"} aria-live="polite">{error}</p>}
 
-                    <button type="submit" disabled={isPending} className={styles.btnRegister}>
+                    <button type="submit" disabled={isPending} className={`${styles.btnRegister} auth-button`}>
                         {isPending ? 'Registering...' : 'Register'}
                     </button>
                 </form>

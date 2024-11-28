@@ -2,10 +2,14 @@
 
 import styles from "./page.module.css";
 import TaskItem from "@/components/TaskItem";
-import HomePageHeader from "@/components/HomePageHeader";
+import Filter from "@/components/Filter";
 import getTasksAction from "@/actions/tasks/getTasksAction";
 import { React, useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import addTaskIcon from "@/icons/add_task.png"
+import Image from "next/image";
+import Link from "next/link";
+import properties from "@/properties";
 
 export default function Home() {
     const [error, setError] = useState("Loading data...");
@@ -64,10 +68,15 @@ export default function Home() {
     return (
         <>
             {error && <p className={styles.error}>{error}</p>}
-            <HomePageHeader addSearchParam={addSearchParam} resetSearchParams={resetSearchParams} />
+            <Filter addSearchParam={addSearchParam} resetSearchParams={resetSearchParams} />
             <div className={styles.container}>
                 {taskItems}
             </div>
+
+
+            <Link className={styles['createTask']} href={{ pathname: properties.routes.create_task, query: { from: pathname } }}>
+                <Image src={addTaskIcon} alt="Icon for new task" />
+            </Link>
         </>
     );
 }

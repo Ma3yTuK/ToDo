@@ -1,18 +1,21 @@
 "use client"
 
 import { React, useTransition } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import deleteTaskAction from "@/actions/tasks/deleteTaskAction";
-import Link from "next/link";
+import Image from "next/image";
 import PropTypes from "prop-types";
 import styles from './styles/TaskItem.module.css';
+import properties from "@/properties";
+import deleteTaskIcon from "@/icons/delete_task.png";
+import comletedIcon from "@/icons/completed.webp";
 
 export default function TaskItem({ task, updateTasks }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [isDeletePending, startDeleteTransition] = useTransition();
     
-    const formattedDate = new Date(task.due).toLocaleString('en-US', {
-        weekday: 'long',
+    const formattedDate = new Date(task.due).toLocaleString('en-GB', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -27,43 +30,27 @@ export default function TaskItem({ task, updateTasks }) {
             updateTasks();
         });
     }
+
+    function handleUpdate(event) {
+        event.preventDefault();
+
+        router.push(properties.routes.update_task + task.id + "?" + new URLSearchParams({ from: pathname }).toString());
+    }
     
     return (
         <div className={styles.taskItem}>
-            <div className={styles.content}>
+            <div onClick={handleUpdate} className={styles.content}>
                 <h1 className={styles.title}>{task.title}</h1>
-                <p className={styles.label}>
-                    <strong>Description:</strong>
-                    <span className={styles.description}>{task.description}</span>
-                </p>
-                <p className={styles.label}>
-                    <strong>Due Date:</strong>
-                    <span className={styles.dueDate}>{formattedDate}</span>
-                </p>
-                <p className={styles.label}>
-                    <strong>Status:</strong>
-                    <span
-                        className={
-                            task.status
-                                ? `${styles.status} ${styles.finished}`
-                                : `${styles.status} ${styles.notFinished}`
-                        }
-                    >
-                        {task.status ? 'Finished' : 'Not Finished'}
-                    </span>
+                <p className={styles.description}>
+                    {task.description}
                 </p>
             </div>
-            <div className={styles.actions}>
-                <button
-                    disabled={isDeletePending}
-                    onClick={handleDelete}
-                    className={styles.deleteButton}
-                >
-                    Delete
-                </button>
-                <Link href={{ pathname: `/tasks/update/${task.id}`, query: { from: pathname } }}>
-                    <button className={styles.updateButton}>Update</button>
-                </Link>
+            <div className={styles.itemFooter}>
+                <p className={task.status ? styles.nothing : styles.dueDate} disabled>
+                    {formattedDate}
+                </p>
+                <Image src={comletedIcon} alt="Task completed" className={task.status ? styles.comletedIcon : styles.nothing} />
+                <Image src={deleteTaskIcon} alt="Delete Task" className={styles.deleteIcon} onClick={isDeletePending ? null : handleDelete} />
             </div>
         </div>
     )

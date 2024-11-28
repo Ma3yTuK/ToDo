@@ -5,6 +5,8 @@ import { React, useTransition, useState } from "react";
 import loginAction from "@/actions/loginAction";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
+import properties from "@/properties";
+
 
 export default function Page() {
     const [isPending, startTransition] = useTransition();
@@ -18,51 +20,51 @@ export default function Page() {
     function handleSubmit(event) {
         event.preventDefault();
         startTransition(async () => {
-            setError(await loginAction(formData, searchParams.get('from')));
+            setError(await loginAction(formData, searchParams.get('from') || properties.routes.home));
         })
     }
 
     return (
-        <main className={styles.loginContainer}>
-            <div className={styles.formWrapper}>
-                <h1 className={styles.formTitle}>Login</h1>
+        <main className={"auth-container"}>
+            <div className={"form-wrapper"}>
+                <h1 className={"form-title"}>Login</h1>
 
-                <form onSubmit={handleSubmit} className={styles.loginForm}>
-                    <div className={styles.inputGroup}>
+                <form onSubmit={handleSubmit}>
+                    <div className={"input-group"}>
                         <input
                             value={formData.username}
                             type="text"
                             placeholder="Username"
                             name="username"
                             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                            className={styles.inputField}
+                            className={"input-field"}
                         />
                     </div>
 
-                    <div className={styles.inputGroup}>
+                    <div className={"input-group"}>
                         <input
                             value={formData.password}
                             type="password"
                             placeholder="Password"
                             name="password"
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            className={styles.inputField}
+                            className={"input-field"}
                         />
                     </div>
 
-                    {error && <p className={styles.errorMessage} aria-live="polite">{error}</p>}
+                    {error && <p className={"error-message"} aria-live="polite">{error}</p>}
 
-                    <button type="submit" disabled={isPending} className={styles.btnLogin}>
+                    <button type="submit" disabled={isPending} className={`${styles.btnLogin} auth-button`}>
                         {isPending ? 'Logging in...' : 'Login'}
                     </button>
 
                     <Link
                         href={{
-                            pathname: '/authentication/registration',
+                            pathname: properties.routes.register,
                             query: searchParams,
                         }}
                     >
-                        <button type="button" className={styles.btnRegister}>Register</button>
+                        <button type="button" className={`${styles.btnRegister} auth-button`}>Register</button>
                     </Link>
                 </form>
             </div>

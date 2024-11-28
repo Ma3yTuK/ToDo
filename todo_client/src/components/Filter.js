@@ -1,11 +1,12 @@
 "use client";
 
-import { React, useState, useTransition } from "react";
-import logoutAction from "@/actions/logoutAction";
-import Link from "next/link";
+import { React, useState } from "react";
+import Image from "next/image";
 import { useSearchParams } from 'next/navigation'
 import PropTypes from "prop-types";
-import styles from './styles/HomePageHeader.module.css';
+import styles from './styles/Filter.module.css';
+import upArrow from "@/icons/up_arrow.png";
+import downArrow from "@/icons/down_arrow.png";
 
 
 function getFilters(searchParams) {
@@ -53,16 +54,8 @@ function getFilters(searchParams) {
 }
 
 
-export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
-    const [isLogoutPending, startLogoutTransition] = useTransition();
+export default function Filter({ addSearchParam, resetSearchParams }) {
     const [filters, setFilters] = useState(getFilters(useSearchParams()));
-
-    function handleLogout(event) {
-        event.preventDefault();
-        startLogoutTransition(async () => {
-            await logoutAction();
-        })
-    }
 
     function handleTitleLikeFilter(event) {
         event.preventDefault();
@@ -103,15 +96,7 @@ export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
     }
 
     return (
-        <div className={styles.header}>
-            <button disabled={isLogoutPending} onClick={handleLogout} className={styles.logoutButton}>
-                Logout
-            </button>
-            
-            <Link href={{ pathname: "/tasks/create", query: { from: location.pathname } }}>
-                <button className={styles.addButton}>Add</button>
-            </Link>
-
+        <div className={styles.filter}>
             <div className={styles.filters}>
                 <input
                     type="text"
@@ -120,12 +105,16 @@ export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
                     placeholder="Search by title"
                     className={styles.inputField}
                 />
+
+                <Image className={styles.icon} src={upArrow} alt="up arrow" />
                 <input
                     type="datetime-local"
                     value={filters.dueGreaterThanFilter}
                     onChange={handleDueGreaterThanFilter}
                     className={styles.inputField}
                 />
+
+                <Image className={styles.icon} src={downArrow} alt="down arrow" />
                 <input
                     type="datetime-local"
                     value={filters.dueLessThanFilter}
@@ -148,7 +137,7 @@ export default function HomePageHeader({ addSearchParam, resetSearchParams }) {
         </div>
     )
 }
-HomePageHeader.propTypes = {
+Filter.propTypes = {
     addSearchParam: PropTypes.func,
     resetSearchParams: PropTypes.func
 }

@@ -1,31 +1,29 @@
-"use client";
+"use client"
 
 import { React, useTransition, useState } from "react";
-import addTaskAction from "@/actions/tasks/addTaskAction";
-import { useSearchParams } from 'next/navigation';
-import styles from "./page.module.css";
+import { useSearchParams } from "next/navigation";
+import PropTypes from "prop-types";
+import styles from "./styles/TaskSaving.module.css";
+import properties from "@/properties";
 
-export default function Page() {
+export default function TaskSaving({ message, task, action }) {
+    task.due = new Date(task.due);
+
     const [isPending, startTransition] = useTransition();
     const searchParams = useSearchParams();
     const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        due: new Date(),
-        status: false
-    });
+    const [formData, setFormData] = useState(task);
 
     function handleSubmit(event) {
         event.preventDefault();
         startTransition(async () => {
-            setError(await addTaskAction(formData, searchParams.get('from') || '/'));
+            setError(await action(formData, searchParams.get('from') || properties.routes.home));
         })
     }
 
     return (
         <main className={styles.main}>
-            <h1 className={styles.header}>Add Note</h1>
+            <h1 className={styles.header}>{message}</h1>
 
             <form onSubmit={handleSubmit} className={styles.form}>
                 <label htmlFor="title" className={styles.label}>
@@ -91,9 +89,19 @@ export default function Page() {
                 {error && <p aria-live="polite" className={styles.error}>{error}</p>}
 
                 <button type="submit" disabled={isPending} className={styles.button}>
-                    Create
+                    Save
                 </button>
             </form>
         </main>
     )
+}
+TaskSaving.propTypes = {
+    task: PropTypes.shape({
+        title: PropTypes.string,
+        description: PropTypes.string,
+        due: PropTypes.instanceOf(Date),
+        status: PropTypes.bool,
+    }),
+    message: PropTypes.string,
+    action: PropTypes.func
 }

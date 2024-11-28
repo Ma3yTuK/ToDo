@@ -1,11 +1,10 @@
 'use server';
 
-import { cookies } from "next/headers";
 import { redirect } from 'next/navigation';
+import { deleteAuthToken } from "@/helpers/deleteAuthToken";
+import properties from '@/properties';
 
 export default async function logoutAction() {
-    let cookieStore = await cookies();
-    cookieStore.delete("token");
-
-    return redirect("/authentication/login");
+    await deleteAuthToken();
+    return redirect(properties.routes.login);
 }
