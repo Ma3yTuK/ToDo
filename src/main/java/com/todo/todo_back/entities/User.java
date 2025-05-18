@@ -1,29 +1,24 @@
-package com.todo.todo_back.entities.user;
+package com.todo.todo_back.entities;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import com.todo.todo_back.entities.Authority;
-import com.todo.todo_back.entities.EntityWithId;
-import com.todo.todo_back.entities.Image;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserEntity {
+public class User implements EntityWithId {
 
+    @RequiredArgsConstructor
+    @Getter
     public enum Fields {
         ID("id"),
         NAME("name"),
@@ -33,15 +28,7 @@ public class User implements UserEntity {
         IMAGE("image"),
         AUTHORITIES("authorities");
 
-        Fields(String databaseFieldName) {
-            this.databaseFieldName = databaseFieldName;
-        }
-
         private final String databaseFieldName;
-
-        public String getDatabaseFieldName() {
-            return databaseFieldName;
-        }
     }
 
     @Id

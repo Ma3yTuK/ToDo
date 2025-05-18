@@ -1,5 +1,6 @@
-package com.todo.todo_back.web_controllers.user_controller;
+package com.todo.todo_back.web_controllers.review_controller;
 
+import com.todo.todo_back.entities.Review;
 import com.todo.todo_back.utilities.PageableFilter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestParams implements PageableFilter {
-    private String searchQuery = null;
-    private String sortingOption = null;
+public class ReviewRequestParams implements PageableFilter {
+    private String sortingOption = Review.Fields.DATE.toString();
     private Integer offset = null;
     private Integer limit = null;
 }

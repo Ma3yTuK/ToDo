@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.todo.todo_back.entities.user.User;
-import com.todo.todo_back.repositories.user_repository.UserRepository;
+import com.todo.todo_back.entities.User;
+import com.todo.todo_back.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;

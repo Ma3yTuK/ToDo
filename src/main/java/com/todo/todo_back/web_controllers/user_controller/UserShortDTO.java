@@ -1,14 +1,10 @@
 package com.todo.todo_back.web_controllers.user_controller;
 
-import com.todo.todo_back.entities.Authority;
-import com.todo.todo_back.entities.user.User;
-import com.todo.todo_back.entities.user.UserShort;
+import com.todo.todo_back.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Collection;
 
 @Getter
 @Setter
@@ -16,7 +12,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class UserShortDTO {
 
-    public UserShortDTO(UserShort user) {
+    public UserShortDTO(User user) {
         id = user.getId();
         name = user.getName();
         email = user.getEmail();

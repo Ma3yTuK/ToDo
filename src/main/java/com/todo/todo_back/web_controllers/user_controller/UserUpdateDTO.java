@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateDTO {
-    private Long id;
-    private String name;
-    private Long imageId;
+    private String name = null;
+    private Long imageId = null;
 }
