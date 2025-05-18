@@ -1,0 +1,71 @@
+= AchievementController API Documentation
+:toc: left
+:snippets: {projectDir}/target/generated-snippets
+
+== Retrieve Achievement Parts by Place
+This endpoint retrieves all `AchievementPart` records for a given `Place`.
+
+=== Request
+include::{snippets}/get-achievement-parts-by-place/http-request.adoc[]
+
+=== Response
+include::{snippets}/get-achievement-parts-by-place/http-response.adoc[]
+
+=== Response Fields
+[cols="1,2"]
+|===
+| Field                 | Description
+| `[].id`               | ID of the AchievementPart.
+| `[].name`             | Name of the AchievementPart.
+| `[].place.id`         | ID of the Place.
+| `[].place.placeId`    | Unique identifier for the Place.
+| `[].place.latitude`   | Latitude of the Place.
+| `[].place.longitude`  | Longitude of the Place.
+| `[].place.name`       | Name of the Place.
+|===
+
+---
+
+== Retrieve Completed Achievements
+This endpoint retrieves all completed achievements for the authenticated user.
+
+=== Request
+include::target/generated-snippets/get-completed-achievements/http-request.adoc[]
+
+=== Response
+include::target/generated-snippets/get-completed-achievements/http-response.adoc[]
+
+=== Response Fields
+[cols="1,2"]
+|===
+| Field       | Description
+| `[].id`     | ID of the Achievement.
+| `[].name`   | Name of the Achievement.
+|===
+
+---
+
+== Get Achievements by Location
+This endpoint retrieves achievements based on the user's latitude and longitude.
+
+=== Request
+include::{snippets}/post-location-info/http-request.adoc[]
+
+=== Path Parameters
+[cols="1,2"]
+|===
+| Parameter    | Description
+| `latitude`   | Latitude of the user's location.
+| `longitude`  | Longitude of the user's location.
+|===
+
+=== Response
+include::{snippets}/post-location-info/http-response.adoc[]
+
+=== Response Fields
+[cols="1,2"]
+|===
+| Field       | Description
+| `[].id`     | ID of the Achievement.
+| `[].name`   | Name of the Achievement.
+|===
