@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review implements EntityWithId {
+public class Review extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
@@ -22,30 +22,31 @@ public class Review implements EntityWithId {
         RATING("rating"),
         USER("user"),
         RECIPE("recipe"),
-        DATE("date"),
+        MOMENT("moment"),
         COMMENT("comment");
 
         private final String databaseFieldName;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
+    @NotNull
     private Long rating;
 
     @ManyToOne
     private User user;
 
     @ManyToOne
+    @NotNull
     private Recipe recipe;
 
     @Column
-    private LocalDateTime date;
+    private Long moment;
 
-    @Unique
-    @NotNull(message = "Name must be specified!")
-    @Size(min = 2, message = "Name must be at least 2 characters long!")
+    @NotNull(message = "Comment must be specified!")
+    @Size(min = 2, message = "Comment must be at least 2 characters long!")
     private String comment;
 }

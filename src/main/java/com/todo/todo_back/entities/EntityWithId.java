@@ -1,9 +1,13 @@
 package com.todo.todo_back.entities;
 
-public interface EntityWithId {
-    Long getId();
+public abstract class EntityWithId {
+    abstract Long getId();
 
-    default boolean equals(EntityWithId o) {
-        return this.getId().equals(o.getId());
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof EntityWithId) {
+            return this.getId().equals(((EntityWithId)o).getId());
+        }
+        return false;
     }
 }

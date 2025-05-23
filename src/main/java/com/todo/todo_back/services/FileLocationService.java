@@ -16,13 +16,12 @@ public class FileLocationService {
     private final FileSystemRepository fileSystemRepository;
     private final ImageRepository imageRepository;
 
-    public Long save(byte[] bytes) throws Exception {
-        String location = fileSystemRepository.save(bytes);
+    public Image save(byte[] bytes, String name) throws Exception {
+        String location = fileSystemRepository.save(bytes, name);
         Image image = new Image();
         image.setLocation(location);
 
-        return imageRepository.save(image)
-                .getId();
+        return imageRepository.save(image);
     }
 
     public FileSystemResource find(Long imageId) {

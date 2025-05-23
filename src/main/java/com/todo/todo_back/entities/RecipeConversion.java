@@ -2,7 +2,6 @@ package com.todo.todo_back.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -10,29 +9,31 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeIngredient implements EntityWithId {
+public class RecipeConversion extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
     public enum Fields {
         ID("id"),
         AMOUNT("amount"),
-        INGREDIENT("ingredient"),
+        RECIPE("recipe"),
+        INDEX("index"),
         CONVERSION("conversion");
 
         private final String databaseFieldName;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Float amount;
+    @NotNull
+    private Long amount;
 
     @ManyToOne
-    private Ingredient ingredient;
+    private Recipe recipe;
 
     @ManyToOne
-    private UnitUnitConversion conversion;
+    @NotNull
+    private IngredientUnitConversion conversion;
 }

@@ -2,9 +2,7 @@ package com.todo.todo_back.web_controllers.recipe_controller;
 
 import com.todo.todo_back.entities.Image;
 import com.todo.todo_back.entities.Ingredient;
-import com.todo.todo_back.entities.RecipeIngredient;
 import com.todo.todo_back.entities.RecipeStep;
-import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.RecipeIngredientUpdateDTO;
 import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.RecipeStepUpdateDTO;
 import com.todo.todo_back.web_controllers.user_controller.UserShortDTO;
 import lombok.AllArgsConstructor;
@@ -25,9 +23,11 @@ public class RecipeUpdateDTO {
 
     private String description = null;
 
-    private Collection<RecipeStepUpdateDTO> steps = Collections.emptyList();
+    private Long weight = null;
 
-    private Collection<RecipeIngredientUpdateDTO> ingredients = Collections.emptyList();
+    private Collection<Long> steps = null;
+
+    private Collection<Long> ingredients = null;
 
     private Long imageId;
 }

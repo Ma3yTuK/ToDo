@@ -1,6 +1,5 @@
 package com.todo.todo_back.web_controllers.recipe_controller.nested_dtos;
 
-import com.todo.todo_back.entities.RecipeIngredient;
 import com.todo.todo_back.entities.RecipeStep;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,9 @@ import java.util.Collections;
 @NoArgsConstructor
 public class RecipeStepUpdateDTO {
 
-    private Long id = null;
+    private Long index = null;
 
     private String description = null;
+
+    private Long imageId = null;
 }

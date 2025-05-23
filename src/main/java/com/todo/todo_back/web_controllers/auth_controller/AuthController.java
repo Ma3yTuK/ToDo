@@ -15,10 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -30,7 +27,6 @@ public class AuthController {
 	private final JwtEncoder encoder;
 
 	@PostMapping("/login")
-	@ResponseBody
 	public LoginResponse login(@RequestBody LoginRequest loginRequest) throws GeneralSecurityException, IOException {
 		GoogleIdToken idToken = googleIdTokenVerifier.verify(loginRequest.getUserId());
 		LoginResponse loginResponse = new LoginResponse();
@@ -43,6 +39,7 @@ public class AuthController {
 			User user = userRepository.findByEmail(email).orElseGet(() -> {
 				User newUser = new User();
 				newUser.setEmail(email);
+				newUser.setName(email);
 				userRepository.save(newUser);
 				loginResponse.setIsFirstTime(true);
 				return newUser;
@@ -65,7 +62,39 @@ public class AuthController {
 
 			return loginResponse;
 		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid user");
 		}
+	}
+
+	@GetMapping("/login_email/{email}")
+	public LoginResponse loginEmail(@PathVariable String email) {
+		LoginResponse loginResponse = new LoginResponse();
+
+		User user = userRepository.findByEmail(email).orElseGet(() -> {
+			User newUser = new User();
+			newUser.setEmail(email);
+			newUser.setName(email);
+			newUser.setIsVerified(false);
+			userRepository.save(newUser);
+			loginResponse.setIsFirstTime(true);
+			return newUser;
+		});
+
+		String scope = user.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(" "));
+
+		Instant now = Instant.now();
+		JwtClaimsSet claims = JwtClaimsSet.builder()
+				.issuer("self")
+				.issuedAt(now)
+				.subject(email)
+				.claim("scope", scope)
+				.build();
+
+		loginResponse.setToken(this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
+		loginResponse.setIsFirstTime(true);
+
+		return loginResponse;
 	}
 }

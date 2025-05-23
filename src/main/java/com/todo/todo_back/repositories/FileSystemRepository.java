@@ -12,11 +12,10 @@ import java.util.Objects;
 @Repository
 public class FileSystemRepository {
 
-    String RESOURCES_DIR = Objects.requireNonNull(FileSystemRepository.class.getResource("/"))
-            .getPath();
+    String RESOURCES_DIR = "images/";
 
-    public String save(byte[] content) throws Exception {
-        Path newFile = Paths.get(RESOURCES_DIR + new Date().getTime());
+    public String save(byte[] content, String name) throws Exception {
+        Path newFile = Paths.get(RESOURCES_DIR, new Date().getTime() + name);
         Files.createDirectories(newFile.getParent());
 
         Files.write(newFile, content);

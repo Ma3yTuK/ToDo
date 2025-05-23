@@ -1,7 +1,7 @@
 package com.todo.todo_back.web_controllers.recipe_controller;
 
 import com.todo.todo_back.entities.*;
-import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.RecipeIngredientDTO;
+import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.RecipeConversionDTO;
 import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.RecipeStepDTO;
 import com.todo.todo_back.web_controllers.user_controller.UserShortDTO;
 import lombok.AllArgsConstructor;
@@ -23,11 +23,15 @@ public class RecipeDTO {
 
     private Long calories;
 
+    private Long weight;
+
     private Float rating;
 
     private String description;
 
     private Boolean isFavorite;
+
+    private Boolean isVerified;
 
     private Boolean isPremium;
 
@@ -35,7 +39,9 @@ public class RecipeDTO {
 
     private Collection<RecipeStepDTO> steps;
 
-    private Collection<RecipeIngredientDTO> ingredients;
+    private Collection<RecipeConversionDTO> ingredients;
+
+    private Collection<Category> categories;
 
     private Image image;
 }

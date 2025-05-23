@@ -22,6 +22,8 @@ public class RecipeShortDTO {
 
     private String name;
 
+    private Long weight;
+
     private Long calories;
 
     private Float rating;

@@ -14,7 +14,7 @@ import java.util.Collection;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ingredient implements EntityWithId {
+public class Ingredient extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
@@ -29,7 +29,7 @@ public class Ingredient implements EntityWithId {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Unique
@@ -40,9 +40,10 @@ public class Ingredient implements EntityWithId {
     @Column
     private Long calories;
 
-    @ManyToOne
-    private MeasurementUnit unit;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "ingredient_life_style",
+            joinColumns = @JoinColumn(name = "ingredient_id"),
+            inverseJoinColumns = @JoinColumn(name = "life_style_id"))
     private Collection<LifeStyle> lifeStyles;
 }

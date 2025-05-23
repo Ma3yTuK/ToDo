@@ -1,6 +1,6 @@
-package com.todo.todo_back.web_controllers.user_controller;
+package com.todo.todo_back.web_controllers.recipe_controller;
 
-import com.todo.todo_back.entities.User;
+import com.todo.todo_back.entities.Recipe;
 import com.todo.todo_back.utilities.PageableFilter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,15 +12,13 @@ import org.springframework.data.domain.Sort;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestParams implements PageableFilter {
-    private Boolean isVerified = null;
-    private String searchQuery = null;
-    private String sortingOption = User.Fields.ID.getDatabaseFieldName();
+public class VerifiedRequestParams implements PageableFilter {
+    private String sortingOption = Recipe.Fields.ID.getDatabaseFieldName();
     private Integer offset = null;
     private Integer limit = null;
 
     @Override
     public Sort getSortingOption() {
-        return Sort.by(sortingOption);
+        return Sort.by(Sort.Direction.DESC, sortingOption);
     }
 }

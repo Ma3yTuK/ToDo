@@ -1,5 +1,6 @@
 package com.todo.todo_back.web_controllers.user_controller;
 
+import com.todo.todo_back.entities.Image;
 import com.todo.todo_back.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class UserShortDTO {
         name = user.getName();
         email = user.getEmail();
         isVerified = user.getIsVerified();
-        imageId = user.getImage().getId();
+        image = user.getImage();
     }
 
     private Long id;
@@ -28,5 +29,5 @@ public class UserShortDTO {
 
     private Boolean isVerified;
 
-    private Long imageId;
+    private Image image;
 }

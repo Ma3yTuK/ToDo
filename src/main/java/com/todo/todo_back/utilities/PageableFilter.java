@@ -7,15 +7,13 @@ import org.springframework.data.domain.Sort;
 public interface PageableFilter {
     Integer getOffset();
     Integer getLimit();
-    String getSortingOption();
+    Sort getSortingOption();
 
     default Pageable getPageable() {
-        Sort sort = Sort.by(getSortingOption());
-
         if (getOffset() == null || getLimit() == null) {
-            return Pageable.unpaged(sort);
+            return Pageable.unpaged(getSortingOption());
         }
 
-        return PageRequest.of(getOffset(), getLimit(), sort);
+        return PageRequest.of(getOffset(), getLimit(), getSortingOption());
     }
 }

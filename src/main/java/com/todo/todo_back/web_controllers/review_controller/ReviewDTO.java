@@ -21,13 +21,13 @@ public class ReviewDTO {
         id = review.getId();
         rating = review.getRating();
         comment = review.getComment();
-        date = review.getDate();
+        moment = review.getMoment();
         user = new UserShortDTO(review.getUser());
     }
 
     private Long id;
     private Long rating;
     private String comment;
-    private LocalDateTime date;
+    private Long moment;
     private UserShortDTO user;
 }

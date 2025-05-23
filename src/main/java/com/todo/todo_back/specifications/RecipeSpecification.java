@@ -1,10 +1,7 @@
 package com.todo.todo_back.specifications;
 
 import com.todo.todo_back.entities.*;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.hibernate.query.criteria.JpaRoot;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,31 +17,16 @@ public class RecipeSpecification {
 
     public static Specification<Recipe> filteredRecipes(
             String searchQuery,
+            Boolean isVerified,
             Collection<Long> categoryIds,
             Collection<Long> lifeStyleIds,
             Collection<Long> ingredientIds,
             Collection<Long> userIds,
-            Collection<Long> checkLikedRecipeIds,
+            Collection<Long> amongRecipeIds,
             Long likedUserId
     ) {
         return (root, query, builder) -> {
-            String like = Recipe.Fields.LIKES.getDatabaseFieldName();
-            String category = Recipe.Fields.CATEGORIES.getDatabaseFieldName();
-            String author = Recipe.Fields.USER.getDatabaseFieldName();
-            String ingredient = String.join(".", Recipe.Fields.INGREDIENTS.getDatabaseFieldName(), RecipeIngredient.Fields.INGREDIENT.getDatabaseFieldName());
-            String lifeStyle = String.join(".", ingredient, Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName());
-
-            String likeId = User.Fields.ID.getDatabaseFieldName();
-            String categoryId = Category.Fields.ID.getDatabaseFieldName();
-            String authorId = User.Fields.ID.getDatabaseFieldName();
-            String ingredientId = User.Fields.ID.getDatabaseFieldName();
-            String lifeStyleId = Ingredient.Fields.ID.getDatabaseFieldName();
-            String rootId = Recipe.Fields.ID.getDatabaseFieldName();
-
-            root.fetch(category, JoinType.INNER);
-            root.fetch(author, JoinType.INNER);
-            root.fetch(ingredient, JoinType.INNER);
-            root.fetch(lifeStyle, JoinType.INNER);
+            assert query != null;
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -52,28 +34,47 @@ public class RecipeSpecification {
                 predicates.add(builder.like(builder.lower(root.get(Recipe.Fields.NAME.getDatabaseFieldName())), "%" + searchQuery.toLowerCase() + "%"));
             }
 
-            if (likedUserId != null) {
-                predicates.add(builder.equal(root.get(String.join(".", like, likeId)), likedUserId));
+            if (isVerified != null) {
+                predicates.add(builder.equal(root.get(Recipe.Fields.IS_VERIFIED.getDatabaseFieldName()), isVerified));
+            }
 
-                if (checkLikedRecipeIds != null) {
-                    predicates.add(root.get(rootId).in(checkLikedRecipeIds));
-                }
+            if (likedUserId != null) {
+                Join<Recipe, FavoriteInstance> recipeFavoriteInstanceJoin = root.join(Recipe.Fields.LIKES.getDatabaseFieldName());
+                Join<FavoriteInstance, User> favoriteInstanceUserJoin = recipeFavoriteInstanceJoin.join(FavoriteInstance.Fields.USER.getDatabaseFieldName());
+
+                predicates.add(builder.equal(favoriteInstanceUserJoin.get(User.Fields.ID.getDatabaseFieldName()), likedUserId));
+            }
+
+            if (!amongRecipeIds.isEmpty()) {
+                predicates.add(root.get(Recipe.Fields.ID.getDatabaseFieldName()).in(amongRecipeIds));
             }
 
             if (!categoryIds.isEmpty()) {
-                predicates.add(root.get(String.join(".", category, categoryId)).in(categoryIds));
+                Join<Recipe, Category> recipeCategoryJoin = root.join(Recipe.Fields.CATEGORIES.getDatabaseFieldName());
+
+                predicates.add(recipeCategoryJoin.get(Category.Fields.ID.getDatabaseFieldName()).in(categoryIds));
             }
 
             if (!userIds.isEmpty()) {
-                predicates.add(root.get(String.join(".", author, authorId)).in(userIds));
+                Join<Recipe, User> recipeUserJoin = root.join(Recipe.Fields.USER.getDatabaseFieldName());
+
+                predicates.add(recipeUserJoin.get(User.Fields.ID.getDatabaseFieldName()).in(userIds));
             }
 
-            if (!ingredientIds.isEmpty()) {
-                predicates.add(root.get(String.join(".", ingredient, ingredientId)).in(ingredientIds));
-            }
+            if (!ingredientIds.isEmpty() || !lifeStyleIds.isEmpty()) {
+                Join<Recipe, RecipeConversion> recipeRecipeConversionJoin = root.join(Recipe.Fields.INGREDIENTS.getDatabaseFieldName());
+                Join<RecipeConversion, IngredientUnitConversion> recipeRecipeConversionConversionJoin = recipeRecipeConversionJoin.join(RecipeConversion.Fields.CONVERSION.getDatabaseFieldName());
+                Join<IngredientUnitConversion, Ingredient> recipeRecipeConversionConversionIngredientJoin = recipeRecipeConversionJoin.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
 
-            if (!lifeStyleIds.isEmpty()) {
-                predicates.add(root.get(String.join(".", lifeStyle, lifeStyleId)).in(lifeStyleIds));
+                if (!ingredientIds.isEmpty()) {
+                    predicates.add(recipeRecipeConversionConversionIngredientJoin.get(Ingredient.Fields.ID.getDatabaseFieldName()).in(ingredientIds));
+                }
+
+                if (!lifeStyleIds.isEmpty()) {
+                    Join<Ingredient, LifeStyle> recipeRecipeConversionConversionIngredientLifeStyleJoin = recipeRecipeConversionConversionIngredientJoin.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName());
+
+                    predicates.add(recipeRecipeConversionConversionIngredientLifeStyleJoin.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds));
+                }
             }
 
             return builder.and(

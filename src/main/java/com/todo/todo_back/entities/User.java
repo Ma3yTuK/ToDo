@@ -9,13 +9,15 @@ import org.checkerframework.common.aliasing.qual.Unique;
 
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Table(name = "my_user")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements EntityWithId {
+public class User extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
@@ -32,7 +34,7 @@ public class User implements EntityWithId {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "Username must be specified!")
@@ -50,7 +52,12 @@ public class User implements EntityWithId {
     @ManyToOne
     private Image image;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "authority_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
     private Collection<Authority> authorities = Collections.emptyList();
 }
 

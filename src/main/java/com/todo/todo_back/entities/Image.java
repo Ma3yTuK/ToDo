@@ -17,9 +17,9 @@ import org.checkerframework.common.aliasing.qual.Unique;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image implements EntityWithId {
+public class Image extends EntityWithId {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Unique

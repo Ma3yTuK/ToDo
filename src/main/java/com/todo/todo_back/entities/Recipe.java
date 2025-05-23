@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.Collections;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Recipe {
+public class Recipe extends EntityWithId {
 
     @Getter
     @RequiredArgsConstructor
@@ -28,13 +29,14 @@ public class Recipe {
         STEPS("steps"),
         INGREDIENTS("ingredients"),
         CATEGORIES("categories"),
+        IS_VERIFIED("isVerified"),
         LIKES("likes");
 
         private final String databaseFieldName;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "Name must be specified!")
@@ -49,25 +51,34 @@ public class Recipe {
     @Column
     private Boolean isPremium;
 
+    @Column
+    private Boolean isVerified;
+
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Image image;
 
-    @OneToMany
+    @NotNull
+    private Long weight;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private Collection<RecipeStep> steps;
 
-    @OneToMany
-    private Collection<RecipeIngredient> ingredients;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Collection<RecipeConversion> ingredients;
 
-    @ManyToMany
-    private Collection<Category> categories;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
+    private Collection<FavoriteInstance> likes;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
+    private Collection<Review> reviews;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "feature_instance",
+            name = "recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Collection<User> likes;
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Collection<Category> categories;
 }

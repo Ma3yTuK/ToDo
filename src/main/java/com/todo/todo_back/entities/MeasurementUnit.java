@@ -14,7 +14,7 @@ import org.checkerframework.common.aliasing.qual.Unique;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MeasurementUnit implements EntityWithId {
+public class MeasurementUnit extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
@@ -26,7 +26,7 @@ public class MeasurementUnit implements EntityWithId {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Unique

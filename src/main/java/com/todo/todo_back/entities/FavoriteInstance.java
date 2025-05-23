@@ -3,25 +3,28 @@ package com.todo.todo_back.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FavoriteInstance implements EntityWithId {
+public class FavoriteInstance extends EntityWithId {
 
     @Getter
     @RequiredArgsConstructor
     public enum Fields {
         ID("id"),
         USER("user"),
+        MOMENT("moment"),
         RECIPE("recipe");
 
         private final String databaseFieldName;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -29,4 +32,7 @@ public class FavoriteInstance implements EntityWithId {
 
     @ManyToOne
     private Recipe recipe;
+
+    @Column
+    private Long moment;
 }

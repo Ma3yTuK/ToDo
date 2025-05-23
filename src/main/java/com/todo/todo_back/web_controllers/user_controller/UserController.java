@@ -6,6 +6,7 @@ import com.todo.todo_back.repositories.UserRepository;
 import com.todo.todo_back.specifications.UserSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,13 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public Page<UserShortDTO> getAllUsers(UserRequestParams userRequestParams) {
-        return userRepository.findAll(UserSpecification.searchBy(userRequestParams.getSearchQuery()), userRequestParams.getPageable()).map(UserShortDTO::new);
+    public PagedModel<UserShortDTO> getAllUsers(UserRequestParams userRequestParams) {
+        return new PagedModel<>(userRepository.findAll(UserSpecification.searchBy(userRequestParams.getSearchQuery(), userRequestParams.getIsVerified()), userRequestParams.getPageable()).map(UserShortDTO::new));
+    }
+
+    @GetMapping("/meShort")
+    public UserShortDTO getCurrentUserShort(Authentication authentication) {
+        return new UserShortDTO(getUserFromAuthentication(authentication));
     }
 
     @GetMapping("/me")
@@ -44,17 +50,24 @@ public class UserController {
     @PostMapping("/update")
     public UserDTO updateCurrent(@RequestBody UserUpdateDTO userUpdateDTO, Authentication authentication) {
         User user = getUserFromAuthentication(authentication);
-        if (userUpdateDTO.getName() != null) user.setName(userUpdateDTO.getName());
-        if (userUpdateDTO.getImageId() != null) user.setImage(imageRepository.findById(userUpdateDTO.getImageId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
-        return new UserDTO(userRepository.save(user));
+        return updateUser(user, userUpdateDTO);
     }
 
     @PostMapping("/update/{userId}")
     public UserDTO updateUser(@PathVariable Long userId, @RequestBody UserUpdateDTO userUpdateDTO) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        return updateUser(user, userUpdateDTO);
+    }
+
+    private UserDTO updateUser(User user, UserUpdateDTO userUpdateDTO) {
         if (userUpdateDTO.getName() != null) user.setName(userUpdateDTO.getName());
         if (userUpdateDTO.getImageId() != null) user.setImage(imageRepository.findById(userUpdateDTO.getImageId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
-        return new UserDTO(userRepository.save(user));
+
+        try {
+            return new UserDTO(userRepository.save(user));
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public User getUserFromAuthentication(Authentication authentication) {

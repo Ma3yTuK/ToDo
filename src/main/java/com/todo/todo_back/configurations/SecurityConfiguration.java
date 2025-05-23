@@ -48,8 +48,7 @@ public class SecurityConfiguration {
 	SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
 		http
 			.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/login").permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 			)
 			.httpBasic(Customizer.withDefaults())
 			.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer

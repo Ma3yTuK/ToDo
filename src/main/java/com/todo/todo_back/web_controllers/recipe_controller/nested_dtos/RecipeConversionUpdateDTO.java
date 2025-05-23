@@ -9,13 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeIngredientUpdateDTO {
+public class RecipeConversionUpdateDTO {
 
-    private Long id = null;
-
-    private Float amount = null;
-
-    private Long ingredientId = null;
+    private Long amount = null;
 
     private Long conversionId = null;
 }

@@ -11,7 +11,7 @@ import org.checkerframework.common.aliasing.qual.Unique;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category implements EntityWithId {
+public class Category extends EntityWithId {
 
     @RequiredArgsConstructor
     @Getter
@@ -23,11 +23,14 @@ public class Category implements EntityWithId {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Unique
     @NotNull(message = "Name must be specified!")
     @Size(min = 2, message = "Name must be at least 2 characters long!")
     private String name;
+
+    @ManyToOne
+    private Image image;
 }
