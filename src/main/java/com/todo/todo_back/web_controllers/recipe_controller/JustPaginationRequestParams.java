@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerifiedRequestParams implements PageableFilter {
+public class JustPaginationRequestParams implements PageableFilter {
     private String sortingOption = Recipe.Fields.ID.getDatabaseFieldName();
     private Integer offset = null;
     private Integer limit = null;

@@ -19,6 +19,7 @@ import java.util.Collections;
 public class RecipeRequestParams implements PageableFilter {
     private String searchQuery = null;
     private String sortingOption = Recipe.Fields.ID.getDatabaseFieldName();
+    private Boolean sortingAscending = false;
     private Collection<Long> userIds = Collections.emptyList();
     private Collection<Long> categoryIds = Collections.emptyList();
     private Collection<Long> lifeStyleIds = Collections.emptyList();
@@ -28,6 +29,6 @@ public class RecipeRequestParams implements PageableFilter {
 
     @Override
     public Sort getSortingOption() {
-        return Sort.by(sortingOption);
+        return Sort.by(sortingAscending ? Sort.Direction.ASC : Sort.Direction.DESC, sortingOption);
     }
 }

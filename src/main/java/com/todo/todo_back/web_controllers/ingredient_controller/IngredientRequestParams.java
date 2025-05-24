@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 @NoArgsConstructor
 public class IngredientRequestParams implements PageableFilter {
     private String sortingOption = Ingredient.Fields.NAME.getDatabaseFieldName();
+    private String searchQuery= "";
     private Integer offset = null;
     private Integer limit = null;
 

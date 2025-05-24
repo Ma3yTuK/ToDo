@@ -22,6 +22,7 @@ public class RecipeSpecification {
             Collection<Long> lifeStyleIds,
             Collection<Long> ingredientIds,
             Collection<Long> userIds,
+            Collection<Long> excludingUserIds,
             Collection<Long> amongRecipeIds,
             Long likedUserId
     ) {
@@ -55,16 +56,20 @@ public class RecipeSpecification {
                 predicates.add(recipeCategoryJoin.get(Category.Fields.ID.getDatabaseFieldName()).in(categoryIds));
             }
 
-            if (!userIds.isEmpty()) {
+            if (!userIds.isEmpty() || !excludingUserIds.isEmpty()) {
                 Join<Recipe, User> recipeUserJoin = root.join(Recipe.Fields.USER.getDatabaseFieldName());
 
-                predicates.add(recipeUserJoin.get(User.Fields.ID.getDatabaseFieldName()).in(userIds));
+                if (!userIds.isEmpty()) {
+                    predicates.add(recipeUserJoin.get(User.Fields.ID.getDatabaseFieldName()).in(userIds));
+                } else {
+                    predicates.add(recipeUserJoin.get(User.Fields.ID.getDatabaseFieldName()).in(excludingUserIds).not());
+                }
             }
 
             if (!ingredientIds.isEmpty() || !lifeStyleIds.isEmpty()) {
                 Join<Recipe, RecipeConversion> recipeRecipeConversionJoin = root.join(Recipe.Fields.INGREDIENTS.getDatabaseFieldName());
                 Join<RecipeConversion, IngredientUnitConversion> recipeRecipeConversionConversionJoin = recipeRecipeConversionJoin.join(RecipeConversion.Fields.CONVERSION.getDatabaseFieldName());
-                Join<IngredientUnitConversion, Ingredient> recipeRecipeConversionConversionIngredientJoin = recipeRecipeConversionJoin.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
+                Join<IngredientUnitConversion, Ingredient> recipeRecipeConversionConversionIngredientJoin = recipeRecipeConversionConversionJoin.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
 
                 if (!ingredientIds.isEmpty()) {
                     predicates.add(recipeRecipeConversionConversionIngredientJoin.get(Ingredient.Fields.ID.getDatabaseFieldName()).in(ingredientIds));

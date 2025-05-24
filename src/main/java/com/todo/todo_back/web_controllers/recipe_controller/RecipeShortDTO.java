@@ -26,6 +26,8 @@ public class RecipeShortDTO {
 
     private Long calories;
 
+    private Boolean isVerified;
+
     private Float rating;
 
     private Boolean isFavorite;

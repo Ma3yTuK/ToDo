@@ -25,7 +25,7 @@ public class IngredientController {
 
     @GetMapping("/all")
     public PagedModel<IngredientDTO> getAllIngredients(IngredientRequestParams ingredientRequestParams) {
-        return new PagedModel<>(ingredientRepository.findAll(ingredientRequestParams.getPageable()).map(IngredientDTO::new));
+        return new PagedModel<>(ingredientRepository.findAllByNameContainingIgnoreCase(ingredientRequestParams.getSearchQuery(), ingredientRequestParams.getPageable()).map(IngredientDTO::new));
     }
 
     @GetMapping("/allWithoutPagination")

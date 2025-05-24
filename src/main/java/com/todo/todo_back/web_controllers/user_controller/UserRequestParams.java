@@ -16,11 +16,12 @@ public class UserRequestParams implements PageableFilter {
     private Boolean isVerified = null;
     private String searchQuery = null;
     private String sortingOption = User.Fields.ID.getDatabaseFieldName();
+    private Boolean sortingAscending = false;
     private Integer offset = null;
     private Integer limit = null;
 
     @Override
     public Sort getSortingOption() {
-        return Sort.by(sortingOption);
+        return Sort.by(sortingAscending ? Sort.Direction.ASC : Sort.Direction.DESC, sortingOption);
     }
 }

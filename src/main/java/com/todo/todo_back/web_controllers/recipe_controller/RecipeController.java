@@ -9,7 +9,9 @@ import com.todo.todo_back.web_controllers.recipe_controller.nested_dtos.*;
 import com.todo.todo_back.web_controllers.user_controller.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jruby.ir.instructions.BIntInstr;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ public class RecipeController {
     private final IngredientRepository ingredientRepository;
     private final CategoryRepository categoryRepository;
     private final LifeStyleRepository lifeStyleRepository;
+    private final UserRepository userRepository;
     private final RecipeConversionRepository recipeConversionRepository;
     private final RecipeStepRepository recipeStepRepository;
     private final ConversionRepository conversionRepository;
@@ -67,96 +70,81 @@ public class RecipeController {
     }
 
     @GetMapping("/unVerified")
-    public PagedModel<RecipeShortDTO> getUnVerifiedRecipes(VerifiedRequestParams verifiedRequestParams, Authentication authentication) {
+    public PagedModel<RecipeShortDTO> getUnVerifiedRecipes(JustPaginationRequestParams justPaginationRequestParams, Authentication authentication) {
         User currentUser = userController.getUserFromAuthentication(authentication);
 
         if (!currentUser.getAuthorities().stream().map(Authority::getId).toList().contains(Authorities.MODERATE.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        Page<Recipe> result = recipeRepository.findAll(
-                RecipeSpecification.filteredRecipes(
-                        null,
-                        false,
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        null
-                ),
-                verifiedRequestParams.getPageable()
+        return getAllRecipesByParams(
+                null,
+                false,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                List.of(currentUser.getId()),
+                null,
+                Optional.of(currentUser),
+                justPaginationRequestParams.getPageable()
         );
+    }
 
-        List<Recipe> liked = recipeRepository.findAll(
-                RecipeSpecification.filteredRecipes(
-                        null,
-                        true,
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        result.stream().map(Recipe::getId).toList(),
-                        currentUser.getId()
-                ),
-                verifiedRequestParams.getPageable()
-        ).stream().toList();
+    @GetMapping("/mine")
+    public PagedModel<RecipeShortDTO> getMyRecipes(JustPaginationRequestParams justPaginationRequestParams, Authentication authentication) {
+        User currentUser = userController.getUserFromAuthentication(authentication);
 
-        return new PagedModel<>(result.map((recipe) -> liked.contains(recipe) ? shortDtoFromRecipe(recipe, true) : shortDtoFromRecipe(recipe, false)));
+        return getAllRecipesByParams(
+                null,
+                null,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                List.of(currentUser.getId()),
+                Collections.emptyList(),
+                null,
+                Optional.of(currentUser),
+                justPaginationRequestParams.getPageable()
+        );
     }
 
     @GetMapping("/favorite")
     public PagedModel<RecipeShortDTO> getFavoriteRecipes(FavoriteRequestParams favoriteRequestParams, Authentication authentication) {
         User currentUser = userController.getUserFromAuthentication(authentication);
 
-        return new PagedModel<>(recipeRepository.findAll(
-                RecipeSpecification.filteredRecipes(
-                        null,
-                        null,
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        currentUser.getId()
-                ),
+        return getAllRecipesByParams(
+                null,
+                null,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                currentUser.getId(),
+                Optional.of(currentUser),
                 favoriteRequestParams.getPageable()
-        ).map((recipe -> shortDtoFromRecipe(recipe, true))));
+        );
     }
 
     @GetMapping("/all")
     public PagedModel<RecipeShortDTO> getAllRecipes(RecipeRequestParams recipeRequestParams, Authentication authentication) {
-        User currentUser = userController.getUserFromAuthentication(authentication);
 
-        Page<Recipe> result = recipeRepository.findAll(
-                RecipeSpecification.filteredRecipes(
-                        recipeRequestParams.getSearchQuery(),
-                        recipeRequestParams.getUserIds().contains(currentUser.getId()) ? null : true,
-                        recipeRequestParams.getCategoryIds(),
-                        recipeRequestParams.getLifeStyleIds(),
-                        recipeRequestParams.getIngredientIds(),
-                        recipeRequestParams.getUserIds(),
-                        Collections.emptyList(),
-                        null
-                ),
+        Optional<User> currentUser = Optional.empty();
+        if (authentication != null)
+            currentUser = userRepository.findByEmail(authentication.getName());
+        return getAllRecipesByParams(
+                recipeRequestParams.getSearchQuery(),
+                true,
+                recipeRequestParams.getCategoryIds(),
+                recipeRequestParams.getLifeStyleIds(),
+                recipeRequestParams.getIngredientIds(),
+                recipeRequestParams.getUserIds(),
+                Collections.emptyList(),
+                null,
+                currentUser,
                 recipeRequestParams.getPageable()
         );
-
-        List<Recipe> liked = recipeRepository.findAll(
-                RecipeSpecification.filteredRecipes(
-                        recipeRequestParams.getSearchQuery(),
-                        recipeRequestParams.getUserIds().contains(currentUser.getId()) ? null : true,
-                        recipeRequestParams.getCategoryIds(),
-                        recipeRequestParams.getLifeStyleIds(),
-                        recipeRequestParams.getIngredientIds(),
-                        recipeRequestParams.getUserIds(),
-                        result.stream().map(Recipe::getId).toList(),
-                        currentUser.getId()
-                ),
-                recipeRequestParams.getPageable()
-        ).stream().toList();
-
-        return new PagedModel<>(result.map((recipe) -> liked.contains(recipe) ? shortDtoFromRecipe(recipe, true) : shortDtoFromRecipe(recipe, false)));
     }
 
     @PostMapping("/makeFavorite/{recipeId}")
@@ -274,7 +262,7 @@ public class RecipeController {
         checkEditingAuthority(recipe, currentUser);
 
         recipe = fillRecipeFromDto(recipe, recipeUpdateDTO);
-        recipe.setIsVerified(true);
+        recipe.setIsVerified(!recipe.getUser().equals(currentUser));
 
         recipeConversionRepository.deleteAllByRecipeId(recipe.getId());
         recipeStepRepository.deleteAllByRecipeId(recipe.getId());
@@ -319,6 +307,7 @@ public class RecipeController {
         recipeShortDTO.setIsFavorite(isFavorite);
         recipeShortDTO.setIsPremium(recipe.getIsPremium());
         recipeShortDTO.setImage(recipe.getImage());
+        recipeShortDTO.setIsVerified(recipe.getIsVerified());
 
         return recipeShortDTO;
     }
@@ -334,8 +323,8 @@ public class RecipeController {
         recipeDTO.setIsFavorite(recipeShortDTO.getIsFavorite());
         recipeDTO.setIsPremium(recipeShortDTO.getIsPremium());
         recipeDTO.setRating(recipeShortDTO.getRating());
+        recipeDTO.setIsVerified(recipeShortDTO.getIsVerified());
 
-        recipeDTO.setIsVerified(recipe.getIsVerified());
         recipeDTO.setWeight(recipe.getWeight());
         recipeDTO.setCategories(recipe.getCategories());
         recipeDTO.setDescription(recipe.getDescription());
@@ -373,5 +362,50 @@ public class RecipeController {
     private void fillRecipeIngredientFromDto(RecipeConversion recipeConversion, RecipeConversionUpdateDTO recipeConversionUpdateDTO) {
         if(recipeConversionUpdateDTO.getAmount() != null) recipeConversion.setAmount(recipeConversionUpdateDTO.getAmount());
         if(recipeConversionUpdateDTO.getConversionId() != null) recipeConversion.setConversion(conversionRepository.findById(recipeConversionUpdateDTO.getConversionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)));
+    }
+
+    private PagedModel<RecipeShortDTO> getAllRecipesByParams(
+            String searchQuery,
+            Boolean isVerified,
+            Collection<Long> categoryIds,
+            Collection<Long> lifeStyleIds,
+            Collection<Long> ingredientIds,
+            Collection<Long> userIds,
+            Collection<Long> excludingUserIds,
+            Long likedUserId,
+            Optional<User> currentUser,
+            Pageable pageable
+    ) {
+        Page<Recipe> result = recipeRepository.findAll(
+                RecipeSpecification.filteredRecipes(
+                        searchQuery,
+                        isVerified,
+                        categoryIds,
+                        lifeStyleIds,
+                        ingredientIds,
+                        userIds,
+                        excludingUserIds,
+                        Collections.emptyList(),
+                        likedUserId
+                ),
+                pageable
+        );
+
+        List<Recipe> liked = recipeRepository.findAll(
+                RecipeSpecification.filteredRecipes(
+                        searchQuery,
+                        isVerified,
+                        categoryIds,
+                        lifeStyleIds,
+                        ingredientIds,
+                        userIds,
+                        excludingUserIds,
+                        result.stream().map(Recipe::getId).toList(),
+                        currentUser.map(User::getId).orElse(null)
+                ),
+                pageable
+        ).stream().toList();
+
+        return new PagedModel<>(result.map((recipe) -> liked.contains(recipe) ? shortDtoFromRecipe(recipe, true) : shortDtoFromRecipe(recipe, false)));
     }
 }
