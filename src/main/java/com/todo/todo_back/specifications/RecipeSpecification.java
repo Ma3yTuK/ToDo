@@ -76,7 +76,7 @@ public class RecipeSpecification {
                 }
 
                 if (!lifeStyleIds.isEmpty()) {
-                    Join<Ingredient, LifeStyle> recipeRecipeConversionConversionIngredientLifeStyleJoin = recipeRecipeConversionConversionIngredientJoin.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName());
+                    Join<Ingredient, LifeStyle> recipeRecipeConversionConversionIngredientLifeStyleJoin = recipeRecipeConversionConversionIngredientJoin.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName(), JoinType.RIGHT);
 
                     predicates.add(recipeRecipeConversionConversionIngredientLifeStyleJoin.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds));
                 }
