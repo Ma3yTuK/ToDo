@@ -297,7 +297,7 @@ public class RecipeController {
         recipeShortDTO.setWeight(recipe.getWeight());
         recipeShortDTO.setCalories(recipe.getIngredients().stream().reduce(0L, (acc, recipeConversion) -> {
             return (long) (acc + recipeConversion.getConversion().getIngredient().getCalories()
-                                * recipeConversion.getConversion().getCoefficient() * recipeConversion.getAmount() / AMOUNT_OF_GRAM_FOR_CALORIES);
+                                / recipeConversion.getConversion().getCoefficient() * recipeConversion.getAmount() / AMOUNT_OF_GRAM_FOR_CALORIES);
         }, Long::sum));
 
         Long ratingSum = reviewRepository.getRatingSum(recipe).orElse(0L);
