@@ -2,7 +2,6 @@ package com.todo.todo_back.specifications;
 
 import com.todo.todo_back.entities.*;
 import jakarta.persistence.criteria.*;
-import org.hibernate.query.criteria.JpaRoot;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -66,20 +65,31 @@ public class RecipeSpecification {
                 }
             }
 
-            if (!ingredientIds.isEmpty() || !lifeStyleIds.isEmpty()) {
+            if (!lifeStyleIds.isEmpty()) {
+                Subquery<Object> subquery = query.subquery(null);
+
+                Root<RecipeConversion> subqueryConversion = subquery.from(RecipeConversion.class);
+                Join<RecipeConversion, IngredientUnitConversion> subqueryIngredientConversion = subqueryConversion.join(RecipeConversion.Fields.CONVERSION.getDatabaseFieldName());
+                Join<IngredientUnitConversion, Ingredient> subqueryIngredient = subqueryIngredientConversion.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
+                Join<Ingredient, LifeStyle> subqueryLifestyle = subqueryIngredient.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName());
+
+                Predicate join = builder.equal(root.get(Recipe.Fields.INGREDIENTS.getDatabaseFieldName()), subqueryConversion);
+                Predicate notInLifeStyles = subqueryLifestyle.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds).not();
+                Predicate isNull = subqueryLifestyle.isNull();
+
+                Predicate subqueryPredicate = builder.and(join, builder.or(notInLifeStyles, isNull));
+
+                subquery.where(subqueryPredicate);
+
+                predicates.add(builder.exists(subquery).not());
+            }
+
+            if (!ingredientIds.isEmpty()) {
                 Join<Recipe, RecipeConversion> recipeRecipeConversionJoin = root.join(Recipe.Fields.INGREDIENTS.getDatabaseFieldName());
                 Join<RecipeConversion, IngredientUnitConversion> recipeRecipeConversionConversionJoin = recipeRecipeConversionJoin.join(RecipeConversion.Fields.CONVERSION.getDatabaseFieldName());
                 Join<IngredientUnitConversion, Ingredient> recipeRecipeConversionConversionIngredientJoin = recipeRecipeConversionConversionJoin.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
 
-                if (!ingredientIds.isEmpty()) {
-                    predicates.add(recipeRecipeConversionConversionIngredientJoin.get(Ingredient.Fields.ID.getDatabaseFieldName()).in(ingredientIds));
-                }
-
-                if (!lifeStyleIds.isEmpty()) {
-                    Join<Ingredient, LifeStyle> recipeRecipeConversionConversionIngredientLifeStyleJoin = recipeRecipeConversionConversionIngredientJoin.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName(), JoinType.RIGHT);
-
-                    predicates.add(recipeRecipeConversionConversionIngredientLifeStyleJoin.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds));
-                }
+                predicates.add(recipeRecipeConversionConversionIngredientJoin.get(Ingredient.Fields.ID.getDatabaseFieldName()).in(ingredientIds));
             }
 
             return builder.and(
