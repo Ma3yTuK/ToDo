@@ -145,7 +145,10 @@ INSERT INTO my_user (id, name, email, is_verified, image_id) VALUES
                                                                  (7, 'Сергей Попов', 'sergey.popov@example.com', true, NULL),
                                                                  (8, 'Наталья Морозова', 'natalya.morozova@example.com', false, NULL),
                                                                  (9, 'Павел Новиков', 'pavel.novikov@example.com', true, NULL),
-                                                                 (10, 'Анна Лебедева', 'anna.lebedeva@example.com', false, NULL);
+                                                                 (10, 'Назар', 'nazarmatveev2003@gmail.com', true, NULL),
+                                                                 (11, 'Назар', 'starsbrawl164@gmail.com', true, NULL),
+                                                                 (12, 'Назар', 'starsbrawl164v2@gmail.com', true, NULL),
+                                                                 (13, 'Анна Лебедева', 'anna.lebedeva@example.com', false, NULL);
 
 ALTER TABLE my_user ALTER COLUMN id RESTART WITH 100;
 
@@ -555,4 +558,7 @@ INSERT INTO ingredient_life_style (ingredient_id, life_style_id) VALUES
                                                                      (42, 1), (42, 2), (42, 4), (42, 5);
 
 INSERT INTO authority_user (authority_id, user_id) VALUES
-                                                       (3, 2)
+                                                       (3, 2),
+                                                       (3, 10),
+                                                       (4, 10),
+                                                       (4, 11);

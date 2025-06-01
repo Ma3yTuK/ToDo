@@ -165,10 +165,14 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}")
     public RecipeDTO getRecipe(@PathVariable Long recipeId, Authentication authentication) {
-        User currentUser = userController.getUserFromAuthentication(authentication);
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User currentUser = null;
 
-        if (currentUser.getAuthorities().stream().anyMatch(authority -> authority.getId().equals(Authorities.PREMIUM.getId())) && recipe.getIsPremium()) {
+        if (authentication != null) {
+            currentUser = userController.getUserFromAuthentication(authentication);
+        }
+
+        if (recipe.getIsPremium() && (currentUser == null || currentUser.getAuthorities().stream().noneMatch(authority -> authority.getId().equals(Authorities.PREMIUM.getId())))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
