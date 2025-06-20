@@ -73,11 +73,10 @@ public class RecipeSpecification {
                 Join<IngredientUnitConversion, Ingredient> subqueryIngredient = subqueryIngredientConversion.join(IngredientUnitConversion.Fields.INGREDIENT.getDatabaseFieldName());
                 Join<Ingredient, LifeStyle> subqueryLifestyle = subqueryIngredient.join(Ingredient.Fields.LIFE_STYLES.getDatabaseFieldName());
 
-                Predicate join = builder.equal(root.get(Recipe.Fields.INGREDIENTS.getDatabaseFieldName()), subqueryConversion);
-                Predicate notInLifeStyles = subqueryLifestyle.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds).not();
-                Predicate isNull = subqueryLifestyle.isNull();
+                Predicate join = builder.equal(root.get(Recipe.Fields.INGREDIENTS.getDatabaseFieldName()).get(RecipeConversion.Fields.ID.getDatabaseFieldName()), subqueryConversion.get(RecipeConversion.Fields.ID.getDatabaseFieldName()));
+                Predicate inLifeStyles = subqueryLifestyle.get(LifeStyle.Fields.ID.getDatabaseFieldName()).in(lifeStyleIds);
 
-                Predicate subqueryPredicate = builder.and(join, builder.or(notInLifeStyles, isNull));
+                Predicate subqueryPredicate = builder.and(join, inLifeStyles);
 
                 subquery.where(subqueryPredicate);
 

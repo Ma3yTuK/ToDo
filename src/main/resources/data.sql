@@ -146,8 +146,8 @@ INSERT INTO my_user (id, name, email, is_verified, image_id) VALUES
                                                                  (8, 'Наталья Морозова', 'natalya.morozova@example.com', false, NULL),
                                                                  (9, 'Павел Новиков', 'pavel.novikov@example.com', true, NULL),
                                                                  (10, 'Назар', 'nazarmatveev2003@gmail.com', true, NULL),
-                                                                 (11, 'Назар', 'starsbrawl164@gmail.com', true, NULL),
-                                                                 (12, 'Назар', 'starsbrawl164v2@gmail.com', true, NULL),
+                                                                 (11, 'Кос', 'starsbrawl164@gmail.com', true, NULL),
+                                                                 (12, 'Влад', 'starsbrawl164v2@gmail.com', true, NULL),
                                                                  (13, 'Анна Лебедева', 'anna.lebedeva@example.com', false, NULL);
 
 ALTER TABLE my_user ALTER COLUMN id RESTART WITH 100;
@@ -517,9 +517,9 @@ INSERT INTO ingredient_life_style (ingredient_id, life_style_id) VALUES
                                                                      (1, 4), (1, 5), (1, 11), (1, 12),
                                                                      (2, 1), (2, 4), (2, 5), (2, 11),
                                                                      (3, 1), (3, 4), (3, 9), (3, 16),
-                                                                     (4, 1), (4, 4), (4, 7),
-                                                                     (5, 1), (5, 4), (5, 7), (5, 9),
-                                                                     (6, 1), (6, 4), (6, 9), (6, 16),
+                                                                     (4, 4), (4, 7),
+                                                                     (5, 4), (5, 7), (5, 9),
+                                                                     (6, 4), (6, 9), (6, 16),
                                                                      (7, 1), (7, 4), (7, 7),
                                                                      (8, 1), (8, 4), (8, 9), (8, 10),
                                                                      (9, 1), (9, 7), (9, 9), (9, 10),
