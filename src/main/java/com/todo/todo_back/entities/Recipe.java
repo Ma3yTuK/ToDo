@@ -22,7 +22,7 @@ public class Recipe extends EntityWithId {
     public enum Fields {
         ID("id"),
         NAME("name"),
-        DESCRIPTION("description"),
+        INFORMATION("information"),
         IS_PREMIUM("isPremium"),
         USER("user"),
         IMAGE("image"),
@@ -46,7 +46,7 @@ public class Recipe extends EntityWithId {
     @Unique
     @NotNull(message = "Description must be specified!")
     @Size(min = 2, message = "Description must be at least 2 characters long!")
-    private String description;
+    private String information;
 
     @Column
     private Boolean isPremium;

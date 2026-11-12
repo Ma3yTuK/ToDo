@@ -15,16 +15,16 @@ public class RecipeStepDTO {
 
     public RecipeStepDTO(RecipeStep recipeStep) {
         id = recipeStep.getId();
-        description = recipeStep.getDescription();
-        index = recipeStep.getIndex();
+        information = recipeStep.getInformation();
+        ind = recipeStep.getInd();
         image = recipeStep.getImage();
     }
 
     private Long id;
 
-    private Long index;
+    private Long ind;
 
-    private String description;
+    private String information;
 
     private Image image;
 }

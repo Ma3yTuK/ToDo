@@ -152,7 +152,7 @@ INSERT INTO my_user (id, name, email, is_verified, image_id) VALUES
 
 ALTER TABLE my_user ALTER COLUMN id RESTART WITH 100;
 
-INSERT INTO recipe (weight, id, name, description, is_premium, is_verified, user_id, image_id) VALUES
+INSERT INTO recipe (weight, id, name, information, is_premium, is_verified, user_id, image_id) VALUES
                                                                               (1000, 1, 'Паста Карбонара', 'Классическая итальянская паста с беконом и сливками.', false, true, 1, NULL),
                                                                               (1000, 2, 'Салат Цезарь', 'Салат с курицей, сухариками и сыром пармезан.', false, true, 2, NULL),
                                                                               (1000, 3, 'Премиальный чизкейк', 'Нежнейший чизкейк с малиновым соусом.', true, false, 3, NULL),
@@ -385,7 +385,7 @@ INSERT INTO recipe_conversion (id, amount, recipe_id, conversion_id) VALUES
 
 ALTER TABLE recipe_conversion ALTER COLUMN id RESTART WITH 100;
 
-INSERT INTO recipe_step (id, description, image_id, recipe_id, index) VALUES
+INSERT INTO recipe_step (id, information, image_id, recipe_id, ind) VALUES
                                                                           (1, 'Подготовить ингредиенты', NULL, 1, 1),
                                                                           (2, 'Нарезать овощи', NULL, 1, 2),
                                                                           (3, 'Обжарить на сковороде', NULL, 1, 3),

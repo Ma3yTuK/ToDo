@@ -21,7 +21,7 @@ public class RecipeUpdateDTO {
 
     private String name = null;
 
-    private String description = null;
+    private String information = null;
 
     private Long weight = null;
 

@@ -27,7 +27,7 @@ public class RecipeDTO {
 
     private Float rating;
 
-    private String description;
+    private String information;
 
     private Boolean isFavorite;
 

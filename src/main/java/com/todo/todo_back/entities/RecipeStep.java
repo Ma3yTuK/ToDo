@@ -22,10 +22,10 @@ public class RecipeStep extends EntityWithId {
     @Unique
     @NotNull(message = "Description must be specified!")
     @Size(min = 2, message = "Description must be at least 2 characters long!")
-    private String description;
+    private String information;
 
     @NotNull
-    private Long index;
+    private Long ind;
 
     @ManyToOne
     private Recipe recipe;

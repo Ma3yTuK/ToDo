@@ -15,9 +15,9 @@ import java.util.Collections;
 @NoArgsConstructor
 public class RecipeStepUpdateDTO {
 
-    private Long index = null;
+    private Long ind = null;
 
-    private String description = null;
+    private String information = null;
 
     private Long imageId = null;
 }

@@ -331,17 +331,17 @@ public class RecipeController {
 
         recipeDTO.setWeight(recipe.getWeight());
         recipeDTO.setCategories(recipe.getCategories());
-        recipeDTO.setDescription(recipe.getDescription());
+        recipeDTO.setInformation(recipe.getInformation());
         recipeDTO.setUser(new UserShortDTO(recipe.getUser()));
         recipeDTO.setIngredients(recipe.getIngredients().stream().map(RecipeConversionDTO::new).toList());
-        recipeDTO.setSteps(recipe.getSteps().stream().map(RecipeStepDTO::new).sorted((e1, e2) -> (int)(e1.getIndex() - e2.getIndex())).toList());
+        recipeDTO.setSteps(recipe.getSteps().stream().map(RecipeStepDTO::new).sorted((e1, e2) -> (int)(e1.getInd() - e2.getInd())).toList());
 
         return recipeDTO;
     }
 
     private Recipe fillRecipeFromDto(Recipe recipe, RecipeUpdateDTO recipeUpdateDTO) {
         if (recipeUpdateDTO.getName() != null) recipe.setName(recipeUpdateDTO.getName());
-        if (recipeUpdateDTO.getDescription() != null) recipe.setDescription(recipeUpdateDTO.getDescription());
+        if (recipeUpdateDTO.getInformation() != null) recipe.setInformation(recipeUpdateDTO.getInformation());
         if (recipeUpdateDTO.getImageId() != null) recipe.setImage(imageRepository.findById(recipeUpdateDTO.getImageId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)));
         if (recipeUpdateDTO.getWeight() != null) recipe.setWeight(recipeUpdateDTO.getWeight());
 
@@ -358,9 +358,9 @@ public class RecipeController {
     }
 
     private void fillRecipeStepFromDto(RecipeStep recipeStep, RecipeStepUpdateDTO recipeStepUpdateDTO) {
-        if(recipeStepUpdateDTO.getDescription() != null) recipeStep.setDescription(recipeStepUpdateDTO.getDescription());
+        if(recipeStepUpdateDTO.getInformation() != null) recipeStep.setInformation(recipeStepUpdateDTO.getInformation());
         if(recipeStepUpdateDTO.getImageId() != null) recipeStep.setImage(imageRepository.findById(recipeStepUpdateDTO.getImageId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)));
-        if(recipeStepUpdateDTO.getIndex() != null) recipeStep.setIndex(recipeStepUpdateDTO.getIndex());
+        if(recipeStepUpdateDTO.getInd() != null) recipeStep.setInd(recipeStepUpdateDTO.getInd());
     }
 
     private void fillRecipeIngredientFromDto(RecipeConversion recipeConversion, RecipeConversionUpdateDTO recipeConversionUpdateDTO) {

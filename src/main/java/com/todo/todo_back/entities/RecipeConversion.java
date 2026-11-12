@@ -17,7 +17,7 @@ public class RecipeConversion extends EntityWithId {
         ID("id"),
         AMOUNT("amount"),
         RECIPE("recipe"),
-        INDEX("index"),
+        IND("ind"),
         CONVERSION("conversion");
 
         private final String databaseFieldName;
