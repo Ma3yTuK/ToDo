@@ -9,7 +9,7 @@ INSERT INTO measurement_unit (id, name) VALUES
                                             (8, 'щепотка'),
                                             (9, 'стакан');
 
-ALTER TABLE measurement_unit ALTER COLUMN id RESTART WITH 10;
+ALTER TABLE measurement_unit AUTO_INCREMENT = 10;
 
 INSERT INTO ingredient (id, name, calories) VALUES
 -- Овощи
@@ -68,7 +68,7 @@ INSERT INTO ingredient (id, name, calories) VALUES
 (41, 'Орехи грецкие', 654),
 (42, 'Яйцо куриное', 155);
 
-ALTER TABLE ingredient ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE ingredient AUTO_INCREMENT = 100;
 
 INSERT INTO ingredient_unit_conversion (id, ingredient_id, unit_id, coefficient) VALUES
 -- Овощи (граммы)
@@ -127,13 +127,13 @@ INSERT INTO ingredient_unit_conversion (id, ingredient_id, unit_id, coefficient)
 (41, 41, 1, 1),
 (42, 42, 5, 1);  -- Яйцо куриное (шт)
 
-ALTER TABLE ingredient_unit_conversion ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE ingredient_unit_conversion AUTO_INCREMENT = 100;
 
 INSERT INTO authority(id, authority) VALUES
                                          (3, 'Модерация'),
                                          (4, 'Премиум');
 
-ALTER TABLE authority ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE authority AUTO_INCREMENT = 100;
 
 INSERT INTO my_user (id, name, email, is_verified, image_id) VALUES
                                                                  (1, 'Иван Иванов', 'ivan.ivanov@example.com', true, NULL),
@@ -148,9 +148,10 @@ INSERT INTO my_user (id, name, email, is_verified, image_id) VALUES
                                                                  (10, 'Назар', 'nazarmatveev2003@gmail.com', true, NULL),
                                                                  (11, 'Кос', 'starsbrawl164@gmail.com', true, NULL),
                                                                  (12, 'Влад', 'starsbrawl164v2@gmail.com', true, NULL),
-                                                                 (13, 'Анна Лебедева', 'anna.lebedeva@example.com', false, NULL);
+                                                                 (13, 'Анна Лебедева', 'anna.lebedeva@example.com', false, NULL),
+                                                                 (14, 'Котенок', 'kotenok@gmail.com', true, NULL);
 
-ALTER TABLE my_user ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE my_user AUTO_INCREMENT = 100;
 
 INSERT INTO recipe (weight, id, name, information, is_premium, is_verified, user_id, image_id) VALUES
                                                                               (1000, 1, 'Паста Карбонара', 'Классическая итальянская паста с беконом и сливками.', false, true, 1, NULL),
@@ -174,7 +175,7 @@ INSERT INTO recipe (weight, id, name, information, is_premium, is_verified, user
                                                                               (1000, 19, 'Запечённый лосось', 'Филе лосося с лимоном и травами.', false, true, 1, NULL),
                                                                               (1000, 20, 'Тыквенный крем-суп', 'Нежный суп из запечённой тыквы.', false, true, 2, NULL);
 
-ALTER TABLE recipe ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE recipe AUTO_INCREMENT = 100;
 
 INSERT INTO life_style (id, name) VALUES
                                       (1, 'Без глютена'),
@@ -198,7 +199,7 @@ INSERT INTO life_style (id, name) VALUES
                                       (19, 'Постное'),
                                       (20, 'С морепродуктами');
 
-ALTER TABLE life_style ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE life_style AUTO_INCREMENT = 100;
 
 INSERT INTO category (id, name) VALUES
                                     (1, 'Завтраки'),
@@ -222,7 +223,7 @@ INSERT INTO category (id, name) VALUES
                                     (19, 'Постные блюда'),
                                     (20, 'Средиземноморская кухня');
 
-ALTER TABLE category ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE category AUTO_INCREMENT = 100;
 
 INSERT INTO review (id, rating, user_id, recipe_id, moment, comment) VALUES
                                                                          (1, 5, 1, 1, 1747663200000, 'Отличный рецепт, получилось очень вкусно!'),
@@ -246,7 +247,7 @@ INSERT INTO review (id, rating, user_id, recipe_id, moment, comment) VALUES
                                                                          (19, 4, 7, 9, 1746026100000, 'Хороший рецепт, советую попробовать.'),
                                                                          (20, 5, 8, 10, 1745942700000, 'Очень вкусно, рекомендую!');
 
-ALTER TABLE review ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE review AUTO_INCREMENT = 100;
 
 INSERT INTO favorite_instance (id, user_id, recipe_id) VALUES
                                                            (1, 1, 1),
@@ -280,7 +281,7 @@ INSERT INTO favorite_instance (id, user_id, recipe_id) VALUES
                                                            (29, 10, 14),
                                                            (30, 10, 20);
 
-ALTER TABLE favorite_instance ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE favorite_instance AUTO_INCREMENT = 100;
 
 INSERT INTO recipe_conversion (id, amount, recipe_id, conversion_id) VALUES
 -- Рецепт 1 (Паста Карбонара): Морковь, Картофель, Огурец (в граммах)
@@ -383,7 +384,7 @@ INSERT INTO recipe_conversion (id, amount, recipe_id, conversion_id) VALUES
 (59,  30.0, 20, 32),
 (60,   3.0, 20, 42);
 
-ALTER TABLE recipe_conversion ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE recipe_conversion AUTO_INCREMENT = 100;
 
 INSERT INTO recipe_step (id, information, image_id, recipe_id, ind) VALUES
                                                                           (1, 'Подготовить ингредиенты', NULL, 1, 1),
@@ -456,7 +457,7 @@ INSERT INTO recipe_step (id, information, image_id, recipe_id, ind) VALUES
                                                                           (49, 'Подготовить ингредиенты', NULL, 20, 49),
                                                                           (50, 'Смешать все ингредиенты', NULL, 20, 50);
 
-ALTER TABLE recipe_step ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE recipe_step AUTO_INCREMENT = 100;
 
 INSERT INTO recipe_category (recipe_id, category_id) VALUES
                                                          (1, 3),  -- Паста Карбонара: Ужины (3)
@@ -539,7 +540,7 @@ INSERT INTO ingredient_life_style (ingredient_id, life_style_id) VALUES
                                                                      (23, 1), (23, 4), (23, 8), (23, 9),
                                                                      (24, 1), (24, 4), (24, 8), (24, 9),
                                                                      (25, 1), (25, 4), (25, 9), (25, 16),
-                                                                     (26, 1), (26, 4), (26, 8), (26, 16),
+                                                                     (26, 1), (26, 4), (26, 8), (26, 16), (26, 18),
                                                                      (27, 1), (27, 4), (27, 9), (27, 16),
                                                                      (28, 1), (28, 4), (28, 9), (28, 16),
                                                                      (29, 1), (29, 2), (29, 4), (29, 5),
@@ -561,4 +562,6 @@ INSERT INTO authority_user (authority_id, user_id) VALUES
                                                        (3, 2),
                                                        (3, 10),
                                                        (4, 10),
+                                                       (3, 14),
+                                                       (4, 14),
                                                        (4, 11);
